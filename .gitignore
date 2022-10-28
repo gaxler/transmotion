@@ -6,3 +6,5 @@ mtbook/
 **/*/*.pyc
 .env
 scripts/
+doc/
+book/
