@@ -16,7 +16,7 @@ type annotaoitn and use of `dataclasses` to be more explicit as to what
 is being passed around and `einops` to be clearer about the shapes of
 tensors.
 
-# This is still a work in progress. Most notably you’ll find missing
+#### This is still a work in progress. Most notably you’ll find missing
 
 -   data loading functionality
 -   training loop documentation
