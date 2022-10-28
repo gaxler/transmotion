@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>transmotion.inpainting &mdash; TransMotion  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> TransMotion
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Stages of Motion Transfer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../train_signal.html">Training Signals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Doc Strings</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TransMotion</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>transmotion.inpainting</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for transmotion.inpainting</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">In-painting network</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">re</span> <span class="kn">import</span> <span class="n">I</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">torch</span> <span class="k">as</span> <span class="nn">th</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">from</span> <span class="nn">einops</span> <span class="kn">import</span> <span class="n">rearrange</span><span class="p">,</span> <span class="n">repeat</span><span class="p">,</span> <span class="n">parse_shape</span>
+
+<span class="kn">from</span> <span class="nn">.configs</span> <span class="kn">import</span> <span class="n">InpaintingConfig</span>
+<span class="kn">from</span> <span class="nn">.nn_blocks</span> <span class="kn">import</span> <span class="n">DownBlock2d</span><span class="p">,</span> <span class="n">ResBlock2d</span><span class="p">,</span> <span class="n">SameBlock2d</span><span class="p">,</span> <span class="n">UpBlock2d</span>
+
+
+<div class="viewcode-block" id="InpaintingResult"><a class="viewcode-back" href="../../transmotion.html#transmotion.inpainting.InpaintingResult">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">InpaintingResult</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param deformed_src_fmaps: encoder feture map after deformation and occlusion, those have **gradients on the optical flow tensor**.</span>
+<span class="sd">    :param deformed_source: Source image **deformed with optical flow**</span>
+<span class="sd">    :param inpainted_img: generated image from source such that it matches driving pose</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">deformed_src_fmaps</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">th</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span>
+    <span class="sd">&quot;&quot;&quot; ``[bs, d_i, h_i, w_i]`` i-th element of the list &quot;&quot;&quot;</span>
+    <span class="n">deformed_source</span><span class="p">:</span> <span class="n">th</span><span class="o">.</span><span class="n">Tensor</span>
+    <span class="sd">&quot;&quot;&quot; ``[bs, d, h, w]`` &quot;&quot;&quot;</span>
+    <span class="n">inpainted_img</span><span class="p">:</span> <span class="n">th</span><span class="o">.</span><span class="n">Tensor</span>
+    <span class="sd">&quot;&quot;&quot; ``[bs, d, h, w]`` &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="resize_deform"><a class="viewcode-back" href="../../transmotion.html#transmotion.inpainting.resize_deform">[docs]</a><span class="k">def</span> <span class="nf">resize_deform</span><span class="p">(</span><span class="n">frame</span><span class="p">:</span> <span class="n">th</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">deformation</span><span class="p">:</span> <span class="n">th</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">th</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Deform frame according to coordinate deformation.</span>
+
+<span class="sd">    :param deformation: A grid of coordinates :math:`\in [0,1]`.</span>
+<span class="sd">    :type deformation: ``[bs, h1, w1, d (=2)]``</span>
+<span class="sd">    :param frame: An image of a feature map</span>
+<span class="sd">    :type frame: ``[bs, d, h2 ,w2]``</span>
+
+<span class="sd">    :return: Deformed feature map (``[bs, d, h2 ,w2]``)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># validate input shapes</span>
+    <span class="n">fshape</span> <span class="o">=</span> <span class="n">parse_shape</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="s2">&quot;bs d h w&quot;</span><span class="p">)</span>
+    <span class="n">dshape</span> <span class="o">=</span> <span class="n">parse_shape</span><span class="p">(</span><span class="n">deformation</span><span class="p">,</span> <span class="s2">&quot;bs h w d&quot;</span><span class="p">)</span>
+
+    <span class="n">deform</span> <span class="o">=</span> <span class="n">deformation</span>
+    <span class="c1"># if shapes don;t match, resize</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">((</span><span class="n">fshape</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="n">dshape</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="s2">&quot;hw&quot;</span><span class="p">)):</span>
+        <span class="n">deform</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">deformation</span><span class="p">,</span> <span class="s2">&quot;b h w d -&gt; b d h w&quot;</span><span class="p">)</span>
+        <span class="n">deform</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span>
+            <span class="n">deform</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">fshape</span><span class="p">[</span><span class="s2">&quot;h&quot;</span><span class="p">],</span> <span class="n">fshape</span><span class="p">[</span><span class="s2">&quot;w&quot;</span><span class="p">]),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;bilinear&quot;</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="n">deform</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">deform</span><span class="p">,</span> <span class="s2">&quot;b d h w -&gt; b h w d&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">grid_sample</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">deform</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="resize_occlude"><a class="viewcode-back" href="../../transmotion.html#transmotion.inpainting.resize_occlude">[docs]</a><span class="k">def</span> <span class="nf">resize_occlude</span><span class="p">(</span><span class="n">frame</span><span class="p">:</span> <span class="n">th</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">occlusion_mask</span><span class="p">:</span> <span class="n">th</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">th</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Occlude feature map :fmap: using occlusion_mask.</span>
+<span class="sd">    If mask is not the same size as feature map, use bilinear interpolation on the mask</span>
+<span class="sd">    to align the sizes.</span>
+
+<span class="sd">    :param frame: [bs, d, h1, w1]</span>
+<span class="sd">    :param occlusion_mask: [bs, 1, h2, w2]</span>
+
+<span class="sd">    :return: Occluded image ``[bs, d, h1, w1]``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">fshape</span> <span class="o">=</span> <span class="n">parse_shape</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="s2">&quot;bs d h w&quot;</span><span class="p">)</span>
+    <span class="n">oshape</span> <span class="o">=</span> <span class="n">parse_shape</span><span class="p">(</span><span class="n">occlusion_mask</span><span class="p">,</span> <span class="s2">&quot;bs d h w&quot;</span><span class="p">)</span>
+
+    <span class="c1"># if shapes don;t match, resize</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">((</span><span class="n">fshape</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">!=</span> <span class="n">oshape</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="s2">&quot;hw&quot;</span><span class="p">)):</span>
+        <span class="n">occlusion_mask</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span>
+            <span class="n">occlusion_mask</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">fshape</span><span class="p">[</span><span class="s2">&quot;h&quot;</span><span class="p">],</span> <span class="n">fshape</span><span class="p">[</span><span class="s2">&quot;w&quot;</span><span class="p">]),</span>
+            <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;bilinear&quot;</span><span class="p">,</span>
+            <span class="n">align_corners</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">frame</span> <span class="o">*</span> <span class="n">occlusion_mask</span></div>
+
+
+<div class="viewcode-block" id="InpaintingNetwork"><a class="viewcode-back" href="../../transmotion.html#transmotion.inpainting.InpaintingNetwork">[docs]</a><span class="k">class</span> <span class="nc">InpaintingNetwork</span><span class="p">(</span><span class="n">th</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="n">InpaintingConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="n">SameBlock2d</span><span class="p">(</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">in_features</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">base_dim</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">down_blocks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">up_blocks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">res_blocks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">num_down_blocks</span><span class="p">):</span>
+            <span class="n">in_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">max_features</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">base_dim</span> <span class="o">*</span> <span class="mi">2</span><span class="o">**</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">out_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">max_features</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">base_dim</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">down_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">DownBlock2d</span><span class="p">(</span>
+                    <span class="n">in_features</span><span class="o">=</span><span class="n">in_dim</span><span class="p">,</span>
+                    <span class="n">out_features</span><span class="o">=</span><span class="n">out_dim</span><span class="p">,</span>
+                    <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                    <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="n">decoder_in_feature</span> <span class="o">=</span> <span class="n">out_dim</span>
+            <span class="c1"># we concat regular feature map with deformed and occluded feature maps</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">cfg</span><span class="o">.</span><span class="n">num_down_blocks</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">decoder_in_feature</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">out_dim</span>
+
+            <span class="n">up_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">UpBlock2d</span><span class="p">(</span>
+                    <span class="n">decoder_in_feature</span><span class="p">,</span> <span class="n">in_dim</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">_resblock</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">ResBlock2d</span><span class="p">(</span>
+                <span class="n">decoder_in_feature</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">res_blocks</span> <span class="o">+=</span> <span class="p">[</span><span class="n">_resblock</span><span class="p">(),</span> <span class="n">_resblock</span><span class="p">()]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">down_blocks</span> <span class="o">=</span> <span class="n">th</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">down_blocks</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">up_blocks</span> <span class="o">=</span> <span class="n">th</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">up_blocks</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res_blocks</span> <span class="o">=</span> <span class="n">th</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span><span class="n">res_blocks</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">final</span> <span class="o">=</span> <span class="n">th</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">base_dim</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">in_features</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_channels</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">in_features</span>
+
+<div class="viewcode-block" id="InpaintingNetwork.forward"><a class="viewcode-back" href="../../transmotion.html#transmotion.inpainting.InpaintingNetwork.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">source_img</span><span class="p">:</span> <span class="n">th</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+        <span class="n">occlusion_masks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">th</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span>
+        <span class="n">optical_flow</span><span class="p">:</span> <span class="n">th</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InpaintingResult</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward pass has the following flow:</span>
+
+<span class="sd">        -  encode source image to produce encoder features</span>
+<span class="sd">        -  produce optical-flow deformed (:func:`resize_deform`) and mask occluded features (:func:`resize_occlude`). we have two version of the encoder features, one with full gradients and another with gradient only on the optical-flow.</span>
+<span class="sd">        -  use the deformed features as inputs to the decoder</span>
+<span class="sd">        -  deform and occlude the source image </span>
+<span class="sd">        -  final prediction is a convex combination of the deforemed-occluded source image and the inverse occluded decoder output </span>
+
+
+<span class="sd">        :param source_img: Source image batch</span>
+<span class="sd">        :type source_img: ``[bs, 3, h, w]``</span>
+<span class="sd">        :param occlusion_masks: List of multi scale occlusion masks produced by :class:`transmotion.dense_motion.DenseMotionNetwork`.</span>
+<span class="sd">        :type occlusion_masks: ``[bs, d_i, h_i, w_i]`` for i-th element of the list</span>
+<span class="sd">        :param optical_flow: a grid of coordinates, every coordinate tells us where grid pixel should be moved</span>
+<span class="sd">        :type optical_flow: ``[bs, h, w, d (=2)]`` </span>
+
+
+<span class="sd">        .. note:: A Check that the number of occlusion masks is consistent with the number of down-blocks happens during config initx</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">first</span><span class="p">(</span><span class="n">source_img</span><span class="p">)</span>
+        <span class="n">encoding</span> <span class="o">=</span> <span class="p">[</span><span class="n">out</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">down_blocks</span><span class="p">:</span>
+            <span class="n">encoding</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">encoding</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="n">encoding</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="n">encoding</span> <span class="o">=</span> <span class="n">encoding</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># this one trains the optical flow</span>
+        <span class="n">out_ij</span> <span class="o">=</span> <span class="n">resize_deform</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">optical_flow</span><span class="p">)</span>
+        <span class="c1"># occlusion masks infered on deformed images</span>
+        <span class="n">out_ij</span> <span class="o">=</span> <span class="n">resize_occlude</span><span class="p">(</span><span class="n">out_ij</span><span class="p">,</span> <span class="n">occlusion_masks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+
+        <span class="c1"># this one trains both optical flow and in-painting</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">resize_deform</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">optical_flow</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">resize_occlude</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">occlusion_masks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">warp_encoding</span> <span class="o">=</span> <span class="p">[</span><span class="n">out_ij</span><span class="p">]</span>
+
+        <span class="c1"># we might get only a single occlusion mask, this is OK.</span>
+        <span class="c1"># we will broadcast the mask for each feature</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">occlusion_masks</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">occlusion_masks</span> <span class="o">=</span> <span class="n">occlusion_masks</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">up_blocks</span><span class="p">))</span>
+
+        <span class="n">last_encoding_idx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">encoding</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">encode_i</span><span class="p">,</span> <span class="n">occlusion_mask</span><span class="p">))</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+            <span class="nb">zip</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="n">occlusion_masks</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="p">):</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">res_blocks</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span><span class="p">](</span><span class="n">out</span><span class="p">)</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">res_blocks</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">](</span><span class="n">out</span><span class="p">)</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">up_blocks</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">out</span><span class="p">)</span>
+
+            <span class="c1"># train the optical flow</span>
+            <span class="n">encode_ij</span> <span class="o">=</span> <span class="n">resize_deform</span><span class="p">(</span><span class="n">encode_i</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">optical_flow</span><span class="p">)</span>
+            <span class="n">encode_ij</span> <span class="o">=</span> <span class="n">resize_occlude</span><span class="p">(</span><span class="n">encode_ij</span><span class="p">,</span> <span class="n">occlusion_mask</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+            <span class="n">warp_encoding</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">encode_ij</span><span class="p">)</span>
+
+            <span class="n">out_encode_i</span> <span class="o">=</span> <span class="n">resize_deform</span><span class="p">(</span><span class="n">encode_i</span><span class="p">,</span> <span class="n">optical_flow</span><span class="p">)</span>
+            <span class="n">out_encode_i</span> <span class="o">=</span> <span class="n">resize_occlude</span><span class="p">(</span><span class="n">out_encode_i</span><span class="p">,</span> <span class="n">occlusion_mask</span><span class="p">)</span>
+            <span class="c1"># last encoding is the origianl input, so no concat with up block</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">last_encoding_idx</span><span class="p">:</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="n">th</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">out</span><span class="p">,</span> <span class="n">out_encode_i</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">occlusion_last</span> <span class="o">=</span> <span class="n">occlusion_masks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">inv_occlusion</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">occlusion_last</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">resize_occlude</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">inv_occlusion</span><span class="p">)</span> <span class="o">+</span> <span class="n">out_encode_i</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">final</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">th</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">optical_flow_deformed_source</span> <span class="o">=</span> <span class="n">resize_deform</span><span class="p">(</span><span class="n">source_img</span><span class="p">,</span> <span class="n">optical_flow</span><span class="p">)</span>
+        <span class="n">inpainted_img</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">out</span> <span class="o">*</span> <span class="n">inv_occlusion</span> <span class="o">+</span> <span class="n">optical_flow_deformed_source</span> <span class="o">*</span> <span class="n">occlusion_last</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">InpaintingResult</span><span class="p">(</span>
+            <span class="n">deformed_src_fmaps</span><span class="o">=</span><span class="n">warp_encoding</span><span class="p">,</span>
+            <span class="n">deformed_source</span><span class="o">=</span><span class="n">optical_flow_deformed_source</span><span class="p">,</span>
+            <span class="n">inpainted_img</span><span class="o">=</span><span class="n">inpainted_img</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="InpaintingNetwork.get_encode_no_grad"><a class="viewcode-back" href="../../transmotion.html#transmotion.inpainting.InpaintingNetwork.get_encode_no_grad">[docs]</a>    <span class="k">def</span> <span class="nf">get_encode_no_grad</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">driver_img</span><span class="p">:</span> <span class="n">th</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">occlusion_masks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">th</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">th</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: Decreasing dimension and increasing spatial size</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">encodings</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">def</span> <span class="nf">all_encoder_layers</span><span class="p">():</span>
+            <span class="sd">&quot;&quot;&quot;Concat first layer with module list of down blocks&quot;&quot;&quot;</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">first</span>
+            <span class="k">for</span> <span class="n">down_block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">down_blocks</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">down_block</span>
+
+        <span class="k">with</span> <span class="n">th</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">driver_img</span>
+            <span class="n">rev_occl_masks</span> <span class="o">=</span> <span class="n">occlusion_masks</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">enc_block</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">all_encoder_layers</span><span class="p">(),</span> <span class="n">rev_occl_masks</span><span class="p">):</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="n">enc_block</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+                <span class="n">occluded_enc</span> <span class="o">=</span> <span class="n">resize_occlude</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+                <span class="n">encodings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">occluded_enc</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">encodings</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Gregory Axler.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

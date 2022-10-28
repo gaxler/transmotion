@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>transmotion.configs &mdash; TransMotion  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> TransMotion
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Stages of Motion Transfer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../train_signal.html">Training Signals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Doc Strings</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TransMotion</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>transmotion.configs</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for transmotion.configs</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span>
+
+
+<div class="viewcode-block" id="TPSConfig"><a class="viewcode-back" href="../../transmotion.html#transmotion.configs.TPSConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">TPSConfig</span><span class="p">:</span>
+    <span class="n">num_tps</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">points_per_tps</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+<div class="viewcode-block" id="DenseMotionConf"><a class="viewcode-back" href="../../transmotion.html#transmotion.configs.DenseMotionConf">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">DenseMotionConf</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param base_dim: Dimension that encoder and decoder networks start from. This dim multiplied in each block i by a factor of 2^i</span>
+<span class="sd">    :param in_features: Input dimension to the dense mottion network. Usually the input is an image so this value is 3</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">base_dim</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">tps</span><span class="p">:</span> <span class="n">TPSConfig</span>
+    <span class="n">num_blocks</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">in_features</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">max_features</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">kp_variance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span>
+    <span class="n">scale_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.25</span>
+    <span class="n">num_occlusion_masks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span></div>
+
+
+<div class="viewcode-block" id="InpaintingConfig"><a class="viewcode-back" href="../../transmotion.html#transmotion.configs.InpaintingConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">InpaintingConfig</span><span class="p">:</span>
+    <span class="n">base_dim</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">in_features</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">num_down_blocks</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">num_occlusion_masks</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">max_features</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_occlusion_masks_consistent</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_occlusion_masks_consistent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Occlusion masks must be one more than down blocks (or a single mask) got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_occlusion_masks</span><span class="si">}</span><span class="s2"> massk and </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_down_blocks</span><span class="si">}</span><span class="s2"> blocks&quot;</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_occlusion_masks</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_down_blocks</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_occlusion_masks</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="n">_msg</span></div>
+
+
+<div class="viewcode-block" id="PerceptualLoss"><a class="viewcode-back" href="../../transmotion.html#transmotion.configs.PerceptualLoss">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">PerceptualLoss</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get VGG features from multiple scales of the driving image and the generated image.</span>
+<span class="sd">    Train on generated images with L_1 loss.</span>
+
+<span class="sd">    :param scales: List of float number that represent the scaling factors to be applied on the images. This needs to conform to the number of feature maps you get from the perceptual loss network.</span>
+<span class="sd">    By default we use VGG19 here, this net has 5 feature map output. #TODO: Might need to make this more general and explicitly link number of feature maps to number of scales.</span>
+<span class="sd">    :param loss_weight: Loss weights (for each scale) when aggreagted into total loss value</span>
+<span class="sd">    :param in_dim: Perceptual loss multi-scale image pyramid, this is the in dimension of the pyramid input</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">scales</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">loss_weights</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">in_dim</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+<div class="viewcode-block" id="EquivarianceLoss"><a class="viewcode-back" href="../../transmotion.html#transmotion.configs.EquivarianceLoss">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">EquivarianceLoss</span><span class="p">:</span>
+    <span class="n">sigma_tps</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">sigma_affine</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">points_per_tps</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">loss_weight</span><span class="p">:</span> <span class="nb">float</span></div>
+
+
+<div class="viewcode-block" id="WarpLoss"><a class="viewcode-back" href="../../transmotion.html#transmotion.configs.WarpLoss">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">WarpLoss</span><span class="p">:</span>
+    <span class="n">loss_weight</span><span class="p">:</span> <span class="nb">float</span></div>
+
+
+<div class="viewcode-block" id="BackgroundLoss"><a class="viewcode-back" href="../../transmotion.html#transmotion.configs.BackgroundLoss">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">BackgroundLoss</span><span class="p">:</span>
+    <span class="n">loss_weight</span><span class="p">:</span> <span class="nb">float</span></div>
+
+
+<div class="viewcode-block" id="LossConfig"><a class="viewcode-back" href="../../transmotion.html#transmotion.configs.LossConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">LossConfig</span><span class="p">:</span>
+    <span class="n">perceptual</span><span class="p">:</span> <span class="n">PerceptualLoss</span>
+    <span class="n">equivariance</span><span class="p">:</span> <span class="n">EquivarianceLoss</span>
+    <span class="n">warp</span><span class="p">:</span> <span class="n">WarpLoss</span>
+    <span class="n">background</span><span class="p">:</span> <span class="n">BackgroundLoss</span></div>
+
+
+<div class="viewcode-block" id="OptimizerConfig"><a class="viewcode-back" href="../../transmotion.html#transmotion.configs.OptimizerConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">OptimizerConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param initial_lr: base learning rate for the optimizer</span>
+<span class="sd">    :param lr_decay_epoch_sched: Sequence of epoch numbers that represent learning rate decay steps. decay is by lr_decay_gamma</span>
+<span class="sd">    :param lr_decay_gamma: Learning rate decay parameter. Decay happens according to lr_decay_epoch_sched</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">initial_lr</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">lr_decay_epoch_sched</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="sd">&quot;&quot;&quot; Sequence of epoch numbers that represent learning rate decay steps. decay is by lr_decay_gamma &quot;&quot;&quot;</span>
+
+    <span class="n">lr_decay_gamma</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">adam_beta1</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="n">adam_beta2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.999</span>
+    <span class="n">weight_decay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span></div>
+
+
+<div class="viewcode-block" id="DropoutConfig"><a class="viewcode-back" href="../../transmotion.html#transmotion.configs.DropoutConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">DropoutConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Drop-out is applied during tarining to the DenseMotion network. Its not a property of the network but an external param to the forward pass.</span>
+<span class="sd">    So the config for that is in general train config and not the dense motion config.</span>
+
+<span class="sd">    :param prob_inc_epoch: Increment dropout probaility over this amount of epochs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">start_epoch</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">init_prob</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">max_prob</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">prob_inc_epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span></div>
+
+
+<div class="viewcode-block" id="DataLoadingConfig"><a class="viewcode-back" href="../../transmotion.html#transmotion.configs.DataLoadingConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">DataLoadingConfig</span><span class="p">:</span>
+    <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+<div class="viewcode-block" id="TrainConfig"><a class="viewcode-back" href="../../transmotion.html#transmotion.configs.TrainConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">TrainConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; &quot;&quot;&quot;</span>
+
+    <span class="n">data_loading</span><span class="p">:</span> <span class="n">DataLoadingConfig</span>
+    <span class="n">num_epochs</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">optimizer</span><span class="p">:</span> <span class="n">OptimizerConfig</span>
+    <span class="n">dropout</span><span class="p">:</span> <span class="n">DropoutConfig</span>
+    <span class="n">dense_motion</span><span class="p">:</span> <span class="n">DenseMotionConf</span>
+    <span class="n">inpainting</span><span class="p">:</span> <span class="n">InpaintingConfig</span>
+    <span class="n">tps</span><span class="p">:</span> <span class="n">TPSConfig</span>
+    <span class="n">loss</span><span class="p">:</span> <span class="n">LossConfig</span>
+    <span class="n">background_start_epoch</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">image_size</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+<div class="viewcode-block" id="dummy_conf"><a class="viewcode-back" href="../../transmotion.html#transmotion.configs.dummy_conf">[docs]</a><span class="k">def</span> <span class="nf">dummy_conf</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrainConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;VOX model dummy config&quot;&quot;&quot;</span>
+    <span class="n">dl_conf</span> <span class="o">=</span> <span class="n">DataLoadingConfig</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+
+    <span class="n">opt_conf</span> <span class="o">=</span> <span class="n">OptimizerConfig</span><span class="p">(</span>
+        <span class="n">initial_lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">lr_decay_epoch_sched</span><span class="o">=</span><span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">70</span><span class="p">],</span> <span class="n">lr_decay_gamma</span><span class="o">=</span><span class="mf">0.1</span>
+    <span class="p">)</span>
+    <span class="n">do_conf</span> <span class="o">=</span> <span class="n">DropoutConfig</span><span class="p">(</span>
+        <span class="n">start_epoch</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">init_prob</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_prob</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">prob_inc_epochs</span><span class="o">=</span><span class="mi">10</span>
+    <span class="p">)</span>
+    <span class="n">tps_conf</span> <span class="o">=</span> <span class="n">TPSConfig</span><span class="p">(</span><span class="n">num_tps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">points_per_tps</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">dense_conf</span> <span class="o">=</span> <span class="n">DenseMotionConf</span><span class="p">(</span>
+        <span class="n">base_dim</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">tps</span><span class="o">=</span><span class="n">tps_conf</span><span class="p">,</span> <span class="n">num_blocks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">in_features</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">1024</span>
+    <span class="p">)</span>
+
+    <span class="n">inpaint_conf</span> <span class="o">=</span> <span class="n">InpaintingConfig</span><span class="p">(</span>
+        <span class="n">base_dim</span><span class="o">=</span><span class="n">dense_conf</span><span class="o">.</span><span class="n">base_dim</span><span class="p">,</span>
+        <span class="n">in_features</span><span class="o">=</span><span class="n">dense_conf</span><span class="o">.</span><span class="n">in_features</span><span class="p">,</span>
+        <span class="n">num_down_blocks</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">num_occlusion_masks</span><span class="o">=</span><span class="n">dense_conf</span><span class="o">.</span><span class="n">num_occlusion_masks</span><span class="p">,</span>
+        <span class="n">max_features</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">loss_conf</span> <span class="o">=</span> <span class="n">LossConfig</span><span class="p">(</span>
+        <span class="n">perceptual</span><span class="o">=</span><span class="n">PerceptualLoss</span><span class="p">(</span>
+            <span class="n">scales</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.125</span><span class="p">],</span> <span class="n">loss_weights</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">in_dim</span><span class="o">=</span><span class="mi">3</span>
+        <span class="p">),</span>
+        <span class="n">equivariance</span><span class="o">=</span><span class="n">EquivarianceLoss</span><span class="p">(</span>
+            <span class="n">sigma_tps</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span>
+            <span class="n">sigma_affine</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+            <span class="n">points_per_tps</span><span class="o">=</span><span class="n">tps_conf</span><span class="o">.</span><span class="n">points_per_tps</span><span class="p">,</span>
+            <span class="n">loss_weight</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">warp</span><span class="o">=</span><span class="n">WarpLoss</span><span class="p">(</span><span class="n">loss_weight</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+        <span class="n">background</span><span class="o">=</span><span class="n">BackgroundLoss</span><span class="p">(</span><span class="n">loss_weight</span><span class="o">=</span><span class="mi">10</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">TrainConfig</span><span class="p">(</span>
+        <span class="n">data_loading</span><span class="o">=</span><span class="n">dl_conf</span><span class="p">,</span>
+        <span class="n">num_epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="o">=</span><span class="n">opt_conf</span><span class="p">,</span>
+        <span class="n">dropout</span><span class="o">=</span><span class="n">do_conf</span><span class="p">,</span>
+        <span class="n">dense_motion</span><span class="o">=</span><span class="n">dense_conf</span><span class="p">,</span>
+        <span class="n">inpainting</span><span class="o">=</span><span class="n">inpaint_conf</span><span class="p">,</span>
+        <span class="n">tps</span><span class="o">=</span><span class="n">tps_conf</span><span class="p">,</span>
+        <span class="n">loss</span><span class="o">=</span><span class="n">loss_conf</span><span class="p">,</span>
+        <span class="n">background_start_epoch</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="n">image_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+    <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Gregory Axler.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

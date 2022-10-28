@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Motion Transfer - 1&nbsp; Motion Transfer Example</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./grids_warps.html" rel="next">
+<link href="./motion_transfer.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Motion Transfer Example</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Motion Transfer</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./motion_transfer.html" class="sidebar-item-text sidebar-link">Thin-Plate Spline Motion Transfer</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./demo.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Motion Transfer Example</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./grids_warps.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Grids &amp; Warps</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#systems-parts" id="toc-systems-parts" class="nav-link active" data-scroll-target="#systems-parts">Systems Parts</a>
+  <ul class="collapse">
+  <li><a href="#detect-key-points" id="toc-detect-key-points" class="nav-link" data-scroll-target="#detect-key-points">Detect Key-Points</a></li>
+  <li><a href="#infer-optical-flow" id="toc-infer-optical-flow" class="nav-link" data-scroll-target="#infer-optical-flow">Infer Optical Flow</a>
+  <ul class="collapse">
+  <li><a href="#thin-plate-spline-tps" id="toc-thin-plate-spline-tps" class="nav-link" data-scroll-target="#thin-plate-spline-tps">Thin-Plate Spline (TPS)</a></li>
+  <li><a href="#why-do-we-need-occlusion-masks" id="toc-why-do-we-need-occlusion-masks" class="nav-link" data-scroll-target="#why-do-we-need-occlusion-masks">Why do we need occlusion masks?</a></li>
+  <li><a href="#key-point-normalization" id="toc-key-point-normalization" class="nav-link" data-scroll-target="#key-point-normalization">Key Point Normalization</a></li>
+  </ul></li>
+  <li><a href="#visualize-dense-motion-results" id="toc-visualize-dense-motion-results" class="nav-link" data-scroll-target="#visualize-dense-motion-results">Visualize Dense Motion Results</a></li>
+  <li><a href="#inpainting-the-occluded-areas" id="toc-inpainting-the-occluded-areas" class="nav-link" data-scroll-target="#inpainting-the-occluded-areas">Inpainting the occluded areas</a></li>
+  <li><a href="#turning-still-frames-to-animation" id="toc-turning-still-frames-to-animation" class="nav-link" data-scroll-target="#turning-still-frames-to-animation">Turning Still Frames to Animation</a></li>
+  </ul></li>
+  <li><a href="#training-signals" id="toc-training-signals" class="nav-link" data-scroll-target="#training-signals">Training Signals</a>
+  <ul class="collapse">
+  <li><a href="#perceptual-loss" id="toc-perceptual-loss" class="nav-link" data-scroll-target="#perceptual-loss">Perceptual Loss</a></li>
+  <li><a href="#equivariance-loss" id="toc-equivariance-loss" class="nav-link" data-scroll-target="#equivariance-loss">Equivariance Loss</a></li>
+  <li><a href="#optical-flow-loss" id="toc-optical-flow-loss" class="nav-link" data-scroll-target="#optical-flow-loss">Optical-Flow Loss</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title d-none d-lg-block"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Motion Transfer Example</span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<div class="cell" data-execution_count="25">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>sys.path.append(<span class="st">'../src'</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch <span class="im">as</span> th</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torchvision</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> demo_helpers <span class="im">import</span> (drv_vid_tensor, pretrained_weights_to_model_cls,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                          src_img_tensor)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transmotion.configs <span class="im">import</span> dummy_conf</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transmotion.helpers <span class="im">import</span> import_state_dict</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>conf <span class="op">=</span> dummy_conf()</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>DEVICE <span class="op">=</span> th.device(<span class="st">"cpu"</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>IMAGE_SIZE <span class="op">=</span> conf.image_size</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># dict mapping weights to module that needs them</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>weights_for <span class="op">=</span> pretrained_weights_to_model_cls(<span class="st">"../vox.pth.tar"</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_orig_weights_to_device(net: th.nn.Module) <span class="op">-&gt;</span> th.nn.Module:</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    net_cls <span class="op">=</span> net.__class__</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    pretrained_w <span class="op">=</span> import_state_dict(weights_for[net_cls], net.state_dict())</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    net.load_state_dict(pretrained_w)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> net.to(DEVICE)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"># load original training data</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>src_img_t <span class="op">=</span> src_img_tensor(img_size<span class="op">=</span>IMAGE_SIZE).to(DEVICE)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>drv_vid_t <span class="op">=</span> drv_vid_tensor(img_size<span class="op">=</span>IMAGE_SIZE).to(DEVICE) </span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Motion Transfer Models take a still image and a video and animate the still image such that it mimics the motion of the video. We refer to the still image as the <strong>source</strong> and to the video as <strong>driving</strong>.</p>
+<p>Our particular model is Thin-Plate Spline motion transfer <span class="citation" data-cites="ThinPlate">(<a href="references.html#ref-ThinPlate" role="doc-biblioref">Zhao and Zhang 2022</a>)</span>. It has three major stage:</p>
+<ol type="1">
+<li><strong>Detect Key-points</strong> - Use a ResNet model to discover points of interest in an image. We do this for the source image and for the driving video.</li>
+<li><strong>Turn Key-points to optical flow</strong> - Based on the difference between source and driving key-points we infer an optical flow<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Some parts of the driving image can’t be seen in the source image, so if we also try and infer where those areas are (we call those occluded areas)</li>
+<li><strong>Fill-in the occluded areas</strong> - A generative model is use to predict what should go in the missing parts.</li>
+</ol>
+<p>We gonna use data from the <a href="https://github.com/yoyo-nb/Thin-Plate-Spline-Motion-Model">original repository</a> and go over the parts above to see what each of them produces.</p>
+<section id="systems-parts" class="level1">
+<h1>Systems Parts</h1>
+<section id="detect-key-points" class="level2">
+<h2 class="anchored" data-anchor-id="detect-key-points">Detect Key-Points</h2>
+<div class="cell" data-execution_count="26">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load key-points detector</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transmotion.kp_detection <span class="im">import</span> KPDetector, KPResult</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transmotion.viz <span class="im">import</span> show_points_on_grid, draw_points_on_tensors</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transmotion.helpers <span class="im">import</span> import_state_dict</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>kp_detector <span class="op">=</span> KPDetector(conf.tps)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>kp_detector <span class="op">=</span> load_orig_weights_to_device(kp_detector)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">## Just for show</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>img_batch <span class="op">=</span> th.cat((src_img_t, drv_vid_t[:<span class="dv">1</span>]), dim<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> th.no_grad():</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    kp_src_drv_init: KPResult</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    kp_src_drv_init <span class="op">=</span> kp_detector(img_batch)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>plt.imshow(np.asarray(show_points_on_grid(img_batch, kp_src_drv_init)))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-key-points-demo" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="demo_files/figure-html/fig-key-points-demo-output-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Figure 2.1: Key-points on source (left) and driving (right)</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We use a <code>ResNet18</code><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> model to predict the key-points. Key-points are just 2D coordinates on an image. So the ResNet outputs a vector with a dimension of <span class="math inline">K \times N \times 2</span> and values <span class="math inline">\in [0,1]</span>.</p>
+<section id="what-are-those-k-and-n-over-there" class="level4">
+<h4 class="anchored" data-anchor-id="what-are-those-k-and-n-over-there">What are those <span class="math inline">K</span> and <span class="math inline">N</span> over there??</h4>
+<p>The model uses multiple deformations (later on that) in this case <span class="math inline">K</span> is the number of deformation and <span class="math inline">N</span> is the number of points per deformation. Color</p>
+</section>
+<section id="the-key-points-make-no-sense-why" class="level4">
+<h4 class="anchored" data-anchor-id="the-key-points-make-no-sense-why">The key-points make no sense, why?</h4>
+<p>Looking at <a href="#fig-key-points-demo">Figure&nbsp;<span>2.1</span></a> you see that the points appear to be a mess. The reason for the mess is that key-points are trained in a unsupervised manner.</p>
+<p>No human interpretable meaning is present while training, what you see right there are locations the model found useful for reconstruction. We can speculate about the structure. For example the points are clustered around the facial outlines, probably because those are the areas that move the most<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, but those are speculations.</p>
+</section>
+</section>
+<section id="infer-optical-flow" class="level2">
+<h2 class="anchored" data-anchor-id="infer-optical-flow">Infer Optical Flow</h2>
+<p>Key-points are sparse and lossy representation of what’s going on in the images. We need to use this information to actually estimate how to deform the image to do that we do several things:</p>
+<ol type="1">
+<li><strong>Heatmap Representation</strong>: Turn sparse key-points into a Gaussian heatmap</li>
+<li><strong>Estimate Image Deformation</strong>: Key-points represent sparse motion, that is we only know where limited number of points in the source image should move to. To estimate what happens to the other points in the image we learn a Thin-Plate Spline Transformation (TPS).</li>
+<li><strong>Occlusion Masks</strong>: Image deformation is too simple for the real world (e.g.&nbsp;some parts of the driving image can’t be seen on the source image). We estimate what we don’t know after applying deformation.</li>
+</ol>
+<section id="thin-plate-spline-tps" class="level3">
+<h3 class="anchored" data-anchor-id="thin-plate-spline-tps">Thin-Plate Spline (TPS)</h3>
+<p>From a birds eye view, TPS takes a 2D points as input and produces 2D point as an output. The idea is to make the TPS tell us where points from the source image should move to match the driving frame. The only known points for us are the key-points we found earlier. We call those the control points of the TPS.</p>
+<p>TPSs output for the control points on the driving frame will match the control points on the source frame. Other points will be smoothly moved based on the movement of the control points (weighted by the distance from current points to the control points).</p>
+<!-- 
+@ThinPlate use a Thin-Plate Spline Transformation. TPS uses a set of control points in both source and driving frames. You find an Affine transformation and a set of coefficients for a kernel regression such that control points from the driving image will match their location in the source image. 
+
+
+
+A key property of this transformation is its smoothness. That is, the function that can matches those points also doesn't change abruptly when you stray away from the known control points. -->
+<!-- You build a kernel matrix of the control points, solve a linear equation and find coefficinets such that the the kernel matrix matches control points's new location.
+
+$$
+x^{\prime} = K\alpha ~ \Rightarrow ~ \alpha = K^{-1}x^{\prime}
+$$
+
+
+Lets say we have $n$ control points, than $K \in \mathbb{R}^{n \times n}$ is a kernel matrix built from our control points with $\|d\|^{2}log(\|d\|)$ as the kernel function and $d$ as the Euclidian distance between the points. -->
+<p>The different colors in <a href="#fig-key-points-demo">Figure&nbsp;<span>2.1</span></a> represent control points for different TPS transforms. Here we will use a bunch of the to deform the image in many different ways. The different TPS transforms are mixed together using weighting coefficients learned by a neural-net</p>
+</section>
+<section id="why-do-we-need-occlusion-masks" class="level3">
+<h3 class="anchored" data-anchor-id="why-do-we-need-occlusion-masks">Why do we need occlusion masks?</h3>
+<p>TPS is a simple transformation compared to the complexity that is required to transform a pose of a person in a real image. Also, TPS is locally accurate, that is only fits the key-points we asked it to fit.</p>
+<p>Going outside further from those points we lose accuracy completely. We need to know what are the region we can’t approximate well with a simple image deformation. This can be because a new feature needs to appear (e.g.&nbsp;person shows no teeth in the static image, but needs to show those as part of motion transfer) or because our approximation is bad.</p>
+</section>
+<section id="key-point-normalization" class="level3">
+<h3 class="anchored" data-anchor-id="key-point-normalization">Key Point Normalization</h3>
+<div class="cell" data-execution_count="6">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Detect Key-Points fro the source image and the first frame of the driving video</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> th.no_grad():</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    kp_src: KPResult</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    kp_src <span class="op">=</span> kp_detector(src_img_t)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    kp_drv_init: KPResult</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    kp_drv_init <span class="op">=</span> kp_detector(drv_vid_t[:<span class="dv">1</span>])</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Load Dense Motion Network</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transmotion.dense_motion <span class="im">import</span> DenseMotionNetwork, DenseMotionResult</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>dense_motion <span class="op">=</span> DenseMotionNetwork(cfg<span class="op">=</span>conf.dense_motion)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>dense_motion <span class="op">=</span> load_orig_weights_to_device(dense_motion)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> th.no_grad():</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    kp_src: KPResult</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    kp_src <span class="op">=</span> kp_detector(src_img_t)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    kp_drv_init: KPResult</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    kp_drv_init <span class="op">=</span> kp_detector(drv_vid_t[:<span class="dv">1</span>])</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># This functions normalizes source points relative to the change in the driving key-points. </span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> dense_infer_normalized_kp(drv_img: th.Tensor) <span class="op">-&gt;</span> DenseMotionResult:</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    kp_drv: KPResult</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    kp_drv <span class="op">=</span> kp_detector(drv_img.unsqueeze(<span class="dv">0</span>))</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    kp_norm <span class="op">=</span> kp_src.normalize_relative_to(init_drv<span class="op">=</span>kp_drv_init, cur_drv<span class="op">=</span>kp_drv)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    motion_res <span class="op">=</span> dense_motion(</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>            source_img<span class="op">=</span>src_img_t,</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>            src_kp<span class="op">=</span>kp_src,</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>            drv_kp<span class="op">=</span>kp_norm,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>            bg_param<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>            dropout_prob<span class="op">=</span><span class="fl">0.0</span>,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> motion_res</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Inference seems to work better if you only use the change of the driving key-points and not the key points themselves. My guess is that using the change in driving key-points prevents identity information from the driving frame to leak into the source frame (think of Trump’s had getting the shape of the driving video).</p>
+<p>What does it mean the change of the driving key-points? We keep initial driving key-points as reference and track the change in the current driving key-points. Next we apply the change in the driving points to the source points, and use the adjusted source as the new driving.</p>
+</section>
+</section>
+<section id="visualize-dense-motion-results" class="level2">
+<h2 class="anchored" data-anchor-id="visualize-dense-motion-results">Visualize Dense Motion Results</h2>
+<div class="cell" data-execution_count="49">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transmotion.viz <span class="im">import</span> show_on_gird</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> demo_helpers <span class="im">import</span> pils_to_grid, tensors_to_pils, optical_flow_pil </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> th.no_grad():</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> dense_infer_normalized_kp(drv_vid_t[<span class="dv">20</span>])</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>sparse_deformations <span class="op">=</span> tensors_to_pils(<span class="op">*</span>res.deformed_source[<span class="dv">0</span>])</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>optical_flow <span class="op">=</span> optical_flow_pil(res.optical_flow, size<span class="op">=</span>IMAGE_SIZE)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Occlusion masks are 1D, we need to turn them into 3D so that they can be on the same grid with everything else</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>occlusion_masks <span class="op">=</span> [pim.convert(<span class="st">"RGB"</span>) <span class="cf">for</span> pim <span class="kw">in</span> tensors_to_pils(<span class="op">*</span>res.occlusion_masks, size<span class="op">=</span>IMAGE_SIZE)]</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>all_pils <span class="op">=</span> sparse_deformations <span class="op">+</span> [optical_flow] <span class="op">+</span> occlusion_masks</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>pils_to_grid(<span class="op">*</span>all_pils, size<span class="op">=</span>IMAGE_SIZE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="49">
+<div id="fig-dense-output" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="demo_files/figure-html/fig-dense-output-output-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Figure 2.2: TPS Deformed source images, unified optical flow and occlusion masks</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>in <a href="#fig-dense-output">Figure&nbsp;<span>2.2</span></a> the first 11 images (going from left to right) are the deformed source images. The first image represents the backgorund deormations<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> and the other 10 represent 10 TPS transforms (with 5 control points each). Note that each of the TPSs is pretty simple and kinda looks like a linear transformation. The colorfull image is the resulting optical flow. The last 4 images are the occluiosn masks.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
+</section>
+<section id="inpainting-the-occluded-areas" class="level2">
+<h2 class="anchored" data-anchor-id="inpainting-the-occluded-areas">Inpainting the occluded areas</h2>
+<p>At this point we have the optical flow and the occlusion masks, now its time to inpaint the missing areas from the image. The inpainting is done by an encoder-decoder architecture. We encode the source image and decode back the transformed source image.</p>
+<p>The encoding is a series of feature maps on the decoding end, the feature maps get deformed by the optical flow and occluded by the occlusion masks and passed through a decoder layer. So what the encoder-decoder predicts is the occluded areas. At the end of the decoder we take a deformed source image, occlude it and add the predicted occluded areas.</p>
+<div class="cell" data-execution_count="50">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transmotion.inpainting <span class="im">import</span> InpaintingNetwork, InpaintingResult</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>inpaint <span class="op">=</span> InpaintingNetwork(cfg<span class="op">=</span>conf.inpainting)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>inpaint <span class="op">=</span> load_orig_weights_to_device(inpaint)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>inpaint_res: InpaintingResult</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>inpaint_res <span class="op">=</span> inpaint(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    source_img<span class="op">=</span>src_img_t,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    occlusion_masks<span class="op">=</span>res.occlusion_masks,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    optical_flow<span class="op">=</span>res.optical_flow,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> demo_helpers <span class="im">import</span> pil_to_t</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>broadcaster_occlusion <span class="op">=</span>res.occlusion_masks[<span class="op">-</span><span class="dv">1</span>].repeat(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">1</span>) </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>inv_occlusion <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> broadcaster_occlusion)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>residual_prediction <span class="op">=</span> (inpaint_res.inpainted_img <span class="op">-</span> inpaint_res.deformed_source<span class="op">*</span>broadcaster_occlusion) <span class="op">/</span> inv_occlusion</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>occluded_deformed_img <span class="op">=</span> inpaint_res.deformed_source<span class="op">*</span>broadcaster_occlusion</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># source, optical flow, deformed</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>row1 <span class="op">=</span> (src_img_t, pil_to_t(optical_flow).unsqueeze(<span class="dv">0</span>), inpaint_res.deformed_source)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co"># deformed, occlusion, occluded deformed</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>row2 <span class="op">=</span> (inpaint_res.deformed_source, broadcaster_occlusion, occluded_deformed_img)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># occluded deformed, predicted inpainting, final prediction</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>row3 <span class="op">=</span> (occluded_deformed_img, residual_prediction, inpaint_res.inpainted_img)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>show_on_gird(<span class="op">*</span>(row1<span class="op">+</span>row2<span class="op">+</span>row3), nrow<span class="op">=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="50">
+<div id="fig-inpainting-process" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="demo_files/figure-html/fig-inpainting-process-output-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Figure 2.3: Rows show (1) Optical Flow Deformation (2) Occlusion (3) Inpainting</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In the rows of <a href="#fig-inpainting-process">Figure&nbsp;<span>2.3</span></a> (going from left to right top to bottom) you can see the original image, the optical flow deformation and the deformed image. Second row starts with the deformed image, show the last occlusion mask and the occluded image. Last row show the occluded image, prediction from the inpainting network and the combination of the two.</p>
+<section id="notice" class="level4">
+<h4 class="anchored" data-anchor-id="notice">Notice</h4>
+<ul>
+<li>The US flag behind Trump gets deformed (first row on the right). The flag deformation gets occluded (second row on the right) and the final result is Trump occluding the flag and not deformation is visible.</li>
+</ul>
+</section>
+</section>
+<section id="turning-still-frames-to-animation" class="level2">
+<h2 class="anchored" data-anchor-id="turning-still-frames-to-animation">Turning Still Frames to Animation</h2>
+<p>This part is fairly straight forward, you just do the motion transfer from every driving frame to the source image and turn the transformed sources into a video sequence.</p>
+</section>
+</section>
+<section id="training-signals" class="level1">
+<h1>Training Signals</h1>
+<p>How do we get a training signal for this system? We don’t really have the still image in the pose we want it to get from the driving video. Well the key is to decouple the motion from the identity in the still image.</p>
+<p>We represent the driving image as a set of key-points and the motion transfer happens based on those key-points. The driving image used as an input to produce the key-points, as soon as we have those, we don’t need the driving image anymore.</p>
+<p>We can train this system as a video reconstruction task. That is, we take the first frame of the driving video and trying to deform it into the next frames of the video. In this case we know how the end result should look like and can train based on this.</p>
+<p>Few training source<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>:</p>
+<ul>
+<li>we want the output image look the same as the driving image (Perceptual Loss)</li>
+<li>we want the key-points to correspond to some interesting features in the image (Equivariance Loss)</li>
+<li>The optical flow we learn needs to turn source image to driving image. So we want the deformed source image to have the same encoder feature maps as the driving image. (Optical Flow Loss)</li>
+</ul>
+<section id="perceptual-loss" class="level2">
+<h2 class="anchored" data-anchor-id="perceptual-loss">Perceptual Loss</h2>
+<p>To make sure that the images are the same we use a pre-trained <code>VGG</code><a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> network and get its feature maps from different scales for both the driving and the source images. Note that we also scale the images.</p>
+<p>We put an <span class="math inline">L_1</span> loss on the difference between the two sets of feature maps. This loss produces gradients for all the networks in the system.</p>
+</section>
+<section id="equivariance-loss" class="level2">
+<h2 class="anchored" data-anchor-id="equivariance-loss">Equivariance Loss</h2>
+<p>This loss is to make the key-points correspond to some interesting features. What does that mean? Let’s say we do some known transformation to the image. If the key points correspond to interesting points in the image we expect to see the them transformed in similar fashion. This is exactly what this loss forces the key-points to do. We take an image and its predicted key-points as inputs. Do a random TPS transform on the image and find the key-points of the transformed image. Next we apply the same random TPS transform on the predicted key-points. Finally we put an <span class="math inline">L_1</span> loss on the difference between the transformed key-points and the transformed image key-points.</p>
+<p>This loss produces gradients for the key-points detection network.</p>
+</section>
+<section id="optical-flow-loss" class="level2">
+<h2 class="anchored" data-anchor-id="optical-flow-loss">Optical-Flow Loss</h2>
+<p>The inpainting network has an encoder-decoder architecture. Where the encoder feature maps get deformed and occluded by the optical flow and masks predicted in the dense motion stage. Optical flow is the parts we wish to train. So we want to take the feature maps from the <strong>deformed and occluded</strong> source image and make them look like the <strong>occluded</strong> driving image. Once again an <span class="math inline">L_1</span> loss is put on the feature differences.</p>
+<p>This loss doesn’t train the inpainting encoder nor does it trains the occlusion masks but only for the optical flow.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography" style="display: none">
+<div id="ref-ThinPlate" class="csl-entry" role="doc-biblioentry">
+Zhao, Jian, and Hui Zhang. 2022. <span>“Thin-Plate Spline Motion Model for Image Animation.”</span> <em>2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)</em>, 3647–56. <a href="http://arxiv.org/abs/2203.14367">http://arxiv.org/abs/2203.14367</a>.
+</div>
+</div>
+</section>
+</section>
+<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1" role="doc-endnote"><p>where each pixel from the source image should move if we want to deform it to match the driving image<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>See <a href="https://paperswithcode.com/method/resnet">ResNet Explained by PapersWithCode</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>This particular model was train on the VoX dataset, a dataset of talking faces.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p>no deformation in this case.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5" role="doc-endnote"><p>Almost everything here was upscaled to <span class="math inline">256 \times 256</span> for visiablilty. Actually most of those are <span class="math inline">64 \times 64</span><a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6" role="doc-endnote"><p>There is additional background transformation loss, that we skip for now.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7" role="doc-endnote"><p><a href="https://paperswithcode.com/method/vgg">VGG exaplained by Papers With Code</a><a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./motion_transfer.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Thin-Plate Spline Motion Transfer</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./grids_warps.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Grids &amp; Warps</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/gaxler">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/g_axler">
+      <i class="bi bi-twitter" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+</body></html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Training Signals &mdash; TransMotion  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Doc Strings" href="modules.html" />
+    <link rel="prev" title="Stages of Motion Transfer" href="intro.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> TransMotion
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Stages of Motion Transfer</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Training Signals</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#perceptual-loss">Perceptual Loss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#equivariance-loss">Equivariance Loss</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optical-flow-loss">Optical-Flow Loss</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Doc Strings</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">TransMotion</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Training Signals</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/train_signal.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="training-signals">
+<h1>Training Signals<a class="headerlink" href="#training-signals" title="Permalink to this headline"></a></h1>
+<p>How do we get a training signal for this system? We don’t really have
+the still image in the pose we want it to get from the driving video.
+Well the key is to decouple the motion from the identity in the still
+image.</p>
+<p>We represent the driving image as a set of key-points and the motion
+transfer happens based on those key-points. The driving image used as an
+input to produce the key-points, as soon as we have those, we don’t need
+the driving image anymore.</p>
+<p>We can train this system as a video reconstruction task. That is, we
+take the first frame of the driving video and trying to deform it into
+the next frames of the video. In this case we know how the end result
+should look like and can train based on this.</p>
+<p>Few training source <a class="footnote-reference brackets" href="#id2" id="id1">1</a>:</p>
+<ul class="simple">
+<li><p>we want the output image look the same as the driving image
+(Perceptual Loss)</p></li>
+<li><p>we want the key-points to correspond to some interesting features in
+the image (Equivariance Loss)</p></li>
+<li><p>The optical flow we learn needs to turn source image to driving
+image. So we want the deformed source image to have the same encoder
+feature maps as the driving image. (Optical Flow Loss)</p></li>
+</ul>
+<section id="perceptual-loss">
+<h2>Perceptual Loss<a class="headerlink" href="#perceptual-loss" title="Permalink to this headline"></a></h2>
+<p>To make sure that the images are the same we use a pre-trained
+<code class="docutils literal notranslate"><span class="pre">VGG</span></code> network and get its feature maps from different scales
+for both the driving and the source images. Note that we also scale the
+images.</p>
+<p>We put an <span class="math notranslate nohighlight">\(L_1\)</span> loss on the difference between the two sets of
+feature maps. This loss produces gradients for all the networks in the
+system.</p>
+</section>
+<section id="equivariance-loss">
+<h2>Equivariance Loss<a class="headerlink" href="#equivariance-loss" title="Permalink to this headline"></a></h2>
+<p>This loss is to make the key-points correspond to some interesting
+features. What does that mean? Let’s say we do some known transformation
+to the image. If the key points correspond to interesting points in the
+image we expect to see the them transformed in similar fashion. This is
+exactly what this loss forces the key-points to do. We take an image and
+its predicted key-points as inputs. Do a random TPS transform on the
+image and find the key-points of the transformed image. Next we apply
+the same random TPS transform on the predicted key-points. Finally we
+put an <span class="math notranslate nohighlight">\(L_1\)</span> loss on the difference between the transformed
+key-points and the transformed image key-points.</p>
+<p>This loss produces gradients for the key-points detection network.</p>
+</section>
+<section id="optical-flow-loss">
+<h2>Optical-Flow Loss<a class="headerlink" href="#optical-flow-loss" title="Permalink to this headline"></a></h2>
+<p>The inpainting network has an encoder-decoder architecture. Where the
+encoder feature maps get deformed and occluded by the optical flow and
+masks predicted in the dense motion stage. Optical flow is the parts we
+wish to train. So we want to take the feature maps from the <strong>deformed
+and occluded</strong> source image and make them look like the <strong>occluded</strong>
+driving image. Once again an <span class="math notranslate nohighlight">\(L_1\)</span> loss is put on the feature
+differences.</p>
+<p>This loss doesn’t train the inpainting encoder nor does it trains the
+occlusion masks but only for the optical flow.</p>
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>There is additional background transformation loss, that we skip for
+now.</p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="intro.html" class="btn btn-neutral float-left" title="Stages of Motion Transfer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="Doc Strings" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Gregory Axler.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+docs/
+mtbook/
+.vscode/
+.DS_Store
+*.pth.tar
+**/*/*.pyc
+.env
+scripts/
+src/*
+static/
+*.txt

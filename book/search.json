@@ -1,0 +1,121 @@
+[
+  {
+    "objectID": "grids_warps.html",
+    "href": "grids_warps.html",
+    "title": "2  Grids & Warps",
+    "section": "",
+    "text": "Here we show a few examples of the basic building blocks that are used in this work."
+  },
+  {
+    "objectID": "grids_warps.html#uniform-coordinate-grid",
+    "href": "grids_warps.html#uniform-coordinate-grid",
+    "title": "2  Grids & Warps",
+    "section": "Uniform Coordinate Grid",
+    "text": "Uniform Coordinate Grid\nWe use coordinate grids to sample and deform images. Coordinate grids are well… grids, with each coordinates represented as [-1,1]\\times[-1,1]\nThe coordinates are in [-1,1] range, where -1 means left/top and 1 means right/bottom. This is the same format that is used by PyTorch’s grid_sample function.\n\n\nCode\ngrid = make_coordinate_grid(10,10).numpy().reshape(-1, 2)\ndraw_grid(grid)\n\n\n\n\n\nUniformal Coordinate Grid"
+  },
+  {
+    "objectID": "grids_warps.html#random-key-points",
+    "href": "grids_warps.html#random-key-points",
+    "title": "2  Grids & Warps",
+    "section": "Random Key-points",
+    "text": "Random Key-points\nThe key-point detector is untrained so, the key-points we get are from the random init of KPDetector weights. Also, the input images are random.\n\n\nCode\nK = 1\nN = 15\ntps_conf=TPSConfig(K, N)\nbs = 1\nkpd = KPDetector(tps_conf)\n\n\nsrc_img = th.randn((bs, 3, 128, 128))\ndrv_img = th.randn((bs, 3, 128, 128))\nsrc_res = kpd(src_img)\ndrv_res = kpd(drv_img)\ndata = make_data_source(src_res.foregroud_kp.detach().numpy().squeeze(), drv_res.foregroud_kp.detach().numpy().squeeze())\n\nalt.Chart(data).mark_circle().encode(alt.X(\"x:Q\"), alt.Y(\"y:Q\"), color=\"idx:N\").properties(title=\"Two Sets of Random Key-points\")\n\n\n\n\n\nTwo Sets of Random Key-points"
+  },
+  {
+    "objectID": "grids_warps.html#flat-grid-warpped-grid",
+    "href": "grids_warps.html#flat-grid-warpped-grid",
+    "title": "2  Grids & Warps",
+    "section": "Flat grid & Warpped Grid",
+    "text": "Flat grid & Warpped Grid\n\n\nCode\nGRID_HW = (128,128)\ntransform = warp_to_keypoints_with_background(GRID_HW, src_res, drv_res, None)\nmany_grids = transform.warpped_cords.detach().numpy()\n\n# Regular grid, every coordinate matches grid location\nflat_grid = many_grids[0,0].reshape(-1,2)\n# Warpped Grid, coordinates get shifter according to TPS transform\nwarp_grid = many_grids[0,1].reshape(-1,2)\n\ndata = make_data_source(flat_grid, warp_grid)\nalt.Chart(data).mark_circle().encode(alt.X(\"x:Q\"), alt.Y(\"y:Q\"), color=\"idx:N\").configure_axis(grid=False).configure_view(strokeWidth=0).properties(title=\"Flat Grid (idx=0) & Warpped Grid (idx=1)\")\n\n\n\n\n\n\n\nThe same key-points shown on two different grids\n\n\nCode\nalt.hconcat(\n    draw_grid(flat_grid), \n    draw_grid(warp_grid)\n).configure_axis(grid=False).configure_view(strokeWidth=0).properties(title=\"Flat Grid (Left) & Warpped Grid (Right)\")"
+  },
+  {
+    "objectID": "grids_warps.html#warping-images",
+    "href": "grids_warps.html#warping-images",
+    "title": "2  Grids & Warps",
+    "section": "Warping Images",
+    "text": "Warping Images\nHere we warp an actual image with the transformation we fitted to our key-points. In this particular example we don’t see any occlusions\n\n\nCode\nGRID_HW = (480,480)\ntransform = warp_to_keypoints_with_background(GRID_HW, src_res, drv_res, None)\nimg_pil = Image.open(\"data/example.png\").convert(\"RGB\").resize(GRID_HW)\nimg = np.asarray(img_pil)\nimg_t = repeat(th.from_numpy(img), \"h w d -> b d h w\", b=1).type(th.float32)\nwarped_pil = Image.fromarray(transform.deform_frame(img_t).squeeze()[1].permute(1,2,0).detach().type(th.uint8).numpy())\nD = GRID_HW[1]\ncanvas = np.empty((GRID_HW[0], 2*GRID_HW[1], 3), dtype=np.uint8)\ncanvas[:, :D, :] = np.asarray(img_pil)\ncanvas[:, D:, :] = np.asarray(warped_pil)\nImage.fromarray(canvas)"
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "Siarohin, Aliaksandr, Stéphane Lathuilière, S. Tulyakov, Elisa Ricci,\nand N. Sebe. 2019. “First Order Motion Model for Image\nAnimation.” ArXiv abs/2003.00196. http://arxiv.org/abs/2003.00196.\n\n\nSiarohin, Aliaksandr, Oliver J. Woodford, Jian Ren, Menglei Chai, and S.\nTulyakov. 2021. “Motion Representations for Articulated\nAnimation.” 2021 IEEE/CVF Conference on Computer Vision and\nPattern Recognition (CVPR), 13648–57.\n\n\nZhao, Jian, and Hui Zhang. 2022. “Thin-Plate Spline Motion Model\nfor Image Animation.” 2022 IEEE/CVF Conference on Computer\nVision and Pattern Recognition (CVPR), 3647–56. http://arxiv.org/abs/2203.14367."
+  },
+  {
+    "objectID": "motion_transfer.html",
+    "href": "motion_transfer.html",
+    "title": "Thin-Plate Spline Motion Transfer",
+    "section": "",
+    "text": "TPS Motion Transfer is based on Siarohin et al. (2019) and Siarohin et al. (2021)\n\n\n\n\nSiarohin, Aliaksandr, Stéphane Lathuilière, S. Tulyakov, Elisa Ricci, and N. Sebe. 2019. “First Order Motion Model for Image Animation.” ArXiv abs/2003.00196. http://arxiv.org/abs/2003.00196.\n\n\nSiarohin, Aliaksandr, Oliver J. Woodford, Jian Ren, Menglei Chai, and S. Tulyakov. 2021. “Motion Representations for Articulated Animation.” 2021 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 13648–57.\n\n\nZhao, Jian, and Hui Zhang. 2022. “Thin-Plate Spline Motion Model for Image Animation.” 2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 3647–56. http://arxiv.org/abs/2203.14367."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Motion Transfer",
+    "section": "",
+    "text": "This is a work in progress. I’m trying to collect all the stuff I learned about using deep learning to generate animation. Where ever I can, I will use code examples and publish open source code (but that is not always the case, whether because stuff are proprietary or take more time than I’m willing to spend)"
+  },
+  {
+    "objectID": "demo.html",
+    "href": "demo.html",
+    "title": "1  Motion Transfer Example",
+    "section": "",
+    "text": "Code\nimport sys\n\nsys.path.append('../src')\n\nfrom pathlib import Path\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport torch as th\nimport torch.nn.functional as F\nimport torchvision\nfrom demo_helpers import (drv_vid_tensor, pretrained_weights_to_model_cls,\n                          src_img_tensor)\nfrom transmotion.configs import dummy_conf\nfrom transmotion.helpers import import_state_dict\n\nconf = dummy_conf()\n\nDEVICE = th.device(\"cpu\")\nIMAGE_SIZE = conf.image_size\n\n# dict mapping weights to module that needs them\nweights_for = pretrained_weights_to_model_cls(\"../vox.pth.tar\")\n\ndef load_orig_weights_to_device(net: th.nn.Module) -> th.nn.Module:\n    net_cls = net.__class__\n    pretrained_w = import_state_dict(weights_for[net_cls], net.state_dict())\n    net.load_state_dict(pretrained_w)\n    return net.to(DEVICE)\n\n\n\n# load original training data\nsrc_img_t = src_img_tensor(img_size=IMAGE_SIZE).to(DEVICE)\ndrv_vid_t = drv_vid_tensor(img_size=IMAGE_SIZE).to(DEVICE)\nMotion Transfer Models take a still image and a video and animate the still image such that it mimics the motion of the video. We refer to the still image as the source and to the video as driving.\nOur particular model is Thin-Plate Spline motion transfer (Zhao and Zhang 2022). It has three major stage:\nWe gonna use data from the original repository and go over the parts above to see what each of them produces."
+  },
+  {
+    "objectID": "demo.html#detect-key-points",
+    "href": "demo.html#detect-key-points",
+    "title": "1  Motion Transfer Example",
+    "section": "Detect Key-Points",
+    "text": "Detect Key-Points\n\n\nCode\n# Load key-points detector\nfrom transmotion.kp_detection import KPDetector, KPResult\nfrom transmotion.viz import show_points_on_grid, draw_points_on_tensors\nfrom transmotion.helpers import import_state_dict\n\n\nkp_detector = KPDetector(conf.tps)\nkp_detector = load_orig_weights_to_device(kp_detector)\n\n## Just for show\nimg_batch = th.cat((src_img_t, drv_vid_t[:1]), dim=0)\nwith th.no_grad():\n    kp_src_drv_init: KPResult\n    kp_src_drv_init = kp_detector(img_batch)\n\nplt.imshow(np.asarray(show_points_on_grid(img_batch, kp_src_drv_init)));\n\n\n\n\n\nFigure 2.1: Key-points on source (left) and driving (right)\n\n\n\n\nWe use a ResNet182 model to predict the key-points. Key-points are just 2D coordinates on an image. So the ResNet outputs a vector with a dimension of K \\times N \\times 2 and values \\in [0,1].\n\nWhat are those K and N over there??\nThe model uses multiple deformations (later on that) in this case K is the number of deformation and N is the number of points per deformation. Color\n\n\nThe key-points make no sense, why?\nLooking at Figure 2.1 you see that the points appear to be a mess. The reason for the mess is that key-points are trained in a unsupervised manner.\nNo human interpretable meaning is present while training, what you see right there are locations the model found useful for reconstruction. We can speculate about the structure. For example the points are clustered around the facial outlines, probably because those are the areas that move the most3, but those are speculations."
+  },
+  {
+    "objectID": "demo.html#infer-optical-flow",
+    "href": "demo.html#infer-optical-flow",
+    "title": "1  Motion Transfer Example",
+    "section": "Infer Optical Flow",
+    "text": "Infer Optical Flow\nKey-points are sparse and lossy representation of what’s going on in the images. We need to use this information to actually estimate how to deform the image to do that we do several things:\n\nHeatmap Representation: Turn sparse key-points into a Gaussian heatmap\nEstimate Image Deformation: Key-points represent sparse motion, that is we only know where limited number of points in the source image should move to. To estimate what happens to the other points in the image we learn a Thin-Plate Spline Transformation (TPS).\nOcclusion Masks: Image deformation is too simple for the real world (e.g. some parts of the driving image can’t be seen on the source image). We estimate what we don’t know after applying deformation.\n\n\nThin-Plate Spline (TPS)\nFrom a birds eye view, TPS takes a 2D points as input and produces 2D point as an output. The idea is to make the TPS tell us where points from the source image should move to match the driving frame. The only known points for us are the key-points we found earlier. We call those the control points of the TPS.\nTPSs output for the control points on the driving frame will match the control points on the source frame. Other points will be smoothly moved based on the movement of the control points (weighted by the distance from current points to the control points).\n\n\nThe different colors in Figure 2.1 represent control points for different TPS transforms. Here we will use a bunch of the to deform the image in many different ways. The different TPS transforms are mixed together using weighting coefficients learned by a neural-net\n\n\nWhy do we need occlusion masks?\nTPS is a simple transformation compared to the complexity that is required to transform a pose of a person in a real image. Also, TPS is locally accurate, that is only fits the key-points we asked it to fit.\nGoing outside further from those points we lose accuracy completely. We need to know what are the region we can’t approximate well with a simple image deformation. This can be because a new feature needs to appear (e.g. person shows no teeth in the static image, but needs to show those as part of motion transfer) or because our approximation is bad.\n\n\nKey Point Normalization\n\n\nCode\n# Detect Key-Points fro the source image and the first frame of the driving video\nwith th.no_grad():\n    kp_src: KPResult\n    kp_src = kp_detector(src_img_t)\n    kp_drv_init: KPResult\n    kp_drv_init = kp_detector(drv_vid_t[:1])\n\n\n# Load Dense Motion Network\nfrom transmotion.dense_motion import DenseMotionNetwork, DenseMotionResult\n\ndense_motion = DenseMotionNetwork(cfg=conf.dense_motion)\ndense_motion = load_orig_weights_to_device(dense_motion)\n\nwith th.no_grad():\n    kp_src: KPResult\n    kp_src = kp_detector(src_img_t)\n    kp_drv_init: KPResult\n    kp_drv_init = kp_detector(drv_vid_t[:1])\n\n\n# This functions normalizes source points relative to the change in the driving key-points. \ndef dense_infer_normalized_kp(drv_img: th.Tensor) -> DenseMotionResult:\n    kp_drv: KPResult\n    kp_drv = kp_detector(drv_img.unsqueeze(0))\n    kp_norm = kp_src.normalize_relative_to(init_drv=kp_drv_init, cur_drv=kp_drv)\n    \n    motion_res = dense_motion(\n            source_img=src_img_t,\n            src_kp=kp_src,\n            drv_kp=kp_norm,\n            bg_param=None,\n            dropout_prob=0.0,\n        )\n    return motion_res\n\n\nInference seems to work better if you only use the change of the driving key-points and not the key points themselves. My guess is that using the change in driving key-points prevents identity information from the driving frame to leak into the source frame (think of Trump’s had getting the shape of the driving video).\nWhat does it mean the change of the driving key-points? We keep initial driving key-points as reference and track the change in the current driving key-points. Next we apply the change in the driving points to the source points, and use the adjusted source as the new driving."
+  },
+  {
+    "objectID": "demo.html#visualize-dense-motion-results",
+    "href": "demo.html#visualize-dense-motion-results",
+    "title": "1  Motion Transfer Example",
+    "section": "Visualize Dense Motion Results",
+    "text": "Visualize Dense Motion Results\n\n\nCode\nfrom transmotion.viz import show_on_gird\nfrom demo_helpers import pils_to_grid, tensors_to_pils, optical_flow_pil \n\nwith th.no_grad():\n    res = dense_infer_normalized_kp(drv_vid_t[20])\n\n\nsparse_deformations = tensors_to_pils(*res.deformed_source[0])\n\noptical_flow = optical_flow_pil(res.optical_flow, size=IMAGE_SIZE)\n# Occlusion masks are 1D, we need to turn them into 3D so that they can be on the same grid with everything else\nocclusion_masks = [pim.convert(\"RGB\") for pim in tensors_to_pils(*res.occlusion_masks, size=IMAGE_SIZE)]\n\nall_pils = sparse_deformations + [optical_flow] + occlusion_masks\npils_to_grid(*all_pils, size=IMAGE_SIZE)\n\n\n\n\n\nFigure 2.2: TPS Deformed source images, unified optical flow and occlusion masks\n\n\n\n\nin Figure 2.2 the first 11 images (going from left to right) are the deformed source images. The first image represents the backgorund deormations4 and the other 10 represent 10 TPS transforms (with 5 control points each). Note that each of the TPSs is pretty simple and kinda looks like a linear transformation. The colorfull image is the resulting optical flow. The last 4 images are the occluiosn masks.5"
+  },
+  {
+    "objectID": "demo.html#inpainting-the-occluded-areas",
+    "href": "demo.html#inpainting-the-occluded-areas",
+    "title": "1  Motion Transfer Example",
+    "section": "Inpainting the occluded areas",
+    "text": "Inpainting the occluded areas\nAt this point we have the optical flow and the occlusion masks, now its time to inpaint the missing areas from the image. The inpainting is done by an encoder-decoder architecture. We encode the source image and decode back the transformed source image.\nThe encoding is a series of feature maps on the decoding end, the feature maps get deformed by the optical flow and occluded by the occlusion masks and passed through a decoder layer. So what the encoder-decoder predicts is the occluded areas. At the end of the decoder we take a deformed source image, occlude it and add the predicted occluded areas.\n\n\nCode\nfrom transmotion.inpainting import InpaintingNetwork, InpaintingResult\n\ninpaint = InpaintingNetwork(cfg=conf.inpainting)\ninpaint = load_orig_weights_to_device(inpaint)\n\ninpaint_res: InpaintingResult\ninpaint_res = inpaint(\n    source_img=src_img_t,\n    occlusion_masks=res.occlusion_masks,\n    optical_flow=res.optical_flow,\n)\n\nfrom demo_helpers import pil_to_t\n\nbroadcaster_occlusion =res.occlusion_masks[-1].repeat(1,3,1,1) \ninv_occlusion = (1 - broadcaster_occlusion)\nresidual_prediction = (inpaint_res.inpainted_img - inpaint_res.deformed_source*broadcaster_occlusion) / inv_occlusion\noccluded_deformed_img = inpaint_res.deformed_source*broadcaster_occlusion\n\n# source, optical flow, deformed\nrow1 = (src_img_t, pil_to_t(optical_flow).unsqueeze(0), inpaint_res.deformed_source)\n# deformed, occlusion, occluded deformed\nrow2 = (inpaint_res.deformed_source, broadcaster_occlusion, occluded_deformed_img)\n# occluded deformed, predicted inpainting, final prediction\nrow3 = (occluded_deformed_img, residual_prediction, inpaint_res.inpainted_img)\n\nshow_on_gird(*(row1+row2+row3), nrow=3)\n\n\n\n\n\nFigure 2.3: Rows show (1) Optical Flow Deformation (2) Occlusion (3) Inpainting\n\n\n\n\nIn the rows of Figure 2.3 (going from left to right top to bottom) you can see the original image, the optical flow deformation and the deformed image. Second row starts with the deformed image, show the last occlusion mask and the occluded image. Last row show the occluded image, prediction from the inpainting network and the combination of the two.\n\nNotice\n\nThe US flag behind Trump gets deformed (first row on the right). The flag deformation gets occluded (second row on the right) and the final result is Trump occluding the flag and not deformation is visible."
+  },
+  {
+    "objectID": "demo.html#turning-still-frames-to-animation",
+    "href": "demo.html#turning-still-frames-to-animation",
+    "title": "1  Motion Transfer Example",
+    "section": "Turning Still Frames to Animation",
+    "text": "Turning Still Frames to Animation\nThis part is fairly straight forward, you just do the motion transfer from every driving frame to the source image and turn the transformed sources into a video sequence."
+  },
+  {
+    "objectID": "demo.html#perceptual-loss",
+    "href": "demo.html#perceptual-loss",
+    "title": "1  Motion Transfer Example",
+    "section": "Perceptual Loss",
+    "text": "Perceptual Loss\nTo make sure that the images are the same we use a pre-trained VGG7 network and get its feature maps from different scales for both the driving and the source images. Note that we also scale the images.\nWe put an L_1 loss on the difference between the two sets of feature maps. This loss produces gradients for all the networks in the system."
+  },
+  {
+    "objectID": "demo.html#equivariance-loss",
+    "href": "demo.html#equivariance-loss",
+    "title": "1  Motion Transfer Example",
+    "section": "Equivariance Loss",
+    "text": "Equivariance Loss\nThis loss is to make the key-points correspond to some interesting features. What does that mean? Let’s say we do some known transformation to the image. If the key points correspond to interesting points in the image we expect to see the them transformed in similar fashion. This is exactly what this loss forces the key-points to do. We take an image and its predicted key-points as inputs. Do a random TPS transform on the image and find the key-points of the transformed image. Next we apply the same random TPS transform on the predicted key-points. Finally we put an L_1 loss on the difference between the transformed key-points and the transformed image key-points.\nThis loss produces gradients for the key-points detection network."
+  },
+  {
+    "objectID": "demo.html#optical-flow-loss",
+    "href": "demo.html#optical-flow-loss",
+    "title": "1  Motion Transfer Example",
+    "section": "Optical-Flow Loss",
+    "text": "Optical-Flow Loss\nThe inpainting network has an encoder-decoder architecture. Where the encoder feature maps get deformed and occluded by the optical flow and masks predicted in the dense motion stage. Optical flow is the parts we wish to train. So we want to take the feature maps from the deformed and occluded source image and make them look like the occluded driving image. Once again an L_1 loss is put on the feature differences.\nThis loss doesn’t train the inpainting encoder nor does it trains the occlusion masks but only for the optical flow.\n\n\n\n\nZhao, Jian, and Hui Zhang. 2022. “Thin-Plate Spline Motion Model for Image Animation.” 2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 3647–56. http://arxiv.org/abs/2203.14367."
+  }
+]
