@@ -1,5 +1,5 @@
 einops==0.4.1
-imageio==2.22.1
+imageio[ffmpeg]==2.22.1
 mediapipe==0.8.11
 numpy==1.23.2
 Pillow==9.2.0
