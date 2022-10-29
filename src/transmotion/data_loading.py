@@ -1,7 +1,7 @@
 from typing import Callable, Iterable
 
 import imageio
-import imageio.v3 as iio
+# import imageio.v3 as iio
 from skimage.transform import resize
 from skimage import img_as_ubyte
 import numpy as np
@@ -89,7 +89,7 @@ def video_to_tensor(vid_path: str, frame_size: int):
 
 def image_to_tensor(img_path: str, frame_size: int) -> th.Tensor:
 
-    src_img = resize(iio.imread(img_path), (frame_size, frame_size)).astype(np.float32)
+    src_img = resize(imageio.imread(img_path), (frame_size, frame_size)).astype(np.float32)
 
     return repeat(th.from_numpy(src_img), "h w d -> bs d h w", bs=1)
 
