@@ -1,20 +1,16 @@
-from ctypes.wintypes import SIZEL
-from dis import show_code
-from tkinter import Image
 from typing import Dict, Sequence
+
 import imageio
 import numpy as np
-from transmotion.data_loading import video_iteraotr, map_numpy
-
-from skimage.transform import resize
-from einops import rearrange, repeat
-from PIL import Image
-
 import torch as th
 import torchvision
+from einops import rearrange, repeat
+from PIL import Image
+from skimage.transform import resize
+
+from transmotion.data_loading import map_numpy, video_iteraotr
 from transmotion.dense_motion import BGMotionPredictor, DenseMotionNetwork
 from transmotion.inpainting import InpaintingNetwork
-
 from transmotion.kp_detection import KPDetector
 from transmotion.viz import draw_points_on_tensors, show_on_gird
 

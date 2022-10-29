@@ -138,7 +138,7 @@ def tps_warp_to_keypoints_with_background(
     grid_hw: Tuple[int, int],
     source: KPResult,
     driving: KPResult,
-    bkg_affine_param: BGMotionParam | None,
+    bkg_affine_param: BGMotionParam, # BGMotionParam | None ƒ
 ) -> WarppedCords:
     """
     Warp a grid of coordinates of shape ``grid_hw``
@@ -444,7 +444,7 @@ class DenseMotionNetwork(th.nn.Module):
         source_img: th.Tensor,
         src_kp: KPResult,
         drv_kp: KPResult,
-        bg_param: BGMotionParam | None = None,
+        bg_param: BGMotionParam =None,   #| None = None,
         dropout_prob: float = 0.0,
     ) -> DenseMotionResult:
         """

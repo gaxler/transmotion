@@ -24,13 +24,13 @@ def chain_param(*modules) -> Iterable[th.nn.parameter.Parameter]:
 @dataclasses.dataclass
 class NetworkBundleResult:
     """
-    The result of a forward pass. This includes traintime debugging information like source and target key-points
+    The result of a forward pass. This includes traintime debugging information like source and target ke:50y-points
     Optical flow maps, deformed feature maps etc... Final generated frame is available as a property generated_image
     """
 
     source_keypoints: KPResult
     driving_keypoints: KPResult
-    background_param: BGMotionParam | None
+    background_param: BGMotionParam #| None
     dense_motion: DenseMotionResult
     inpainting: InpaintingResult
 
@@ -49,7 +49,7 @@ class NetworksBundle:
     key_points: KPDetector
     dense_motion: DenseMotionNetwork
     inpaint: InpaintingNetwork
-    background_motion: BGMotionPredictor | None
+    background_motion: BGMotionPredictor #| None
 
     def eval(self):
         """
