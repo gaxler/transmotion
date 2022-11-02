@@ -16,6 +16,11 @@ from transmotion.configs import (
     TrainConfig,
     WarpLoss,
 )
+from transmotion.cord_warp import (
+    ThinPlateSpline,
+    deform_with_4d_deformation,
+    grid_like_featuremap,
+)
 from transmotion.datasets import SourceDrivingBatch
 from transmotion.dense_motion import (
     BGMotionParam,
@@ -26,11 +31,6 @@ from transmotion.dense_motion import (
 from transmotion.inpainting import InpaintingNetwork, InpaintingResult
 from transmotion.kp_detection import KPDetector, KPResult
 from transmotion.nn_blocks import get_pretrained_vgg19
-from transmotion.utils import (
-    ThinPlateSpline,
-    deform_with_4d_deformation,
-    grid_like_featuremap,
-)
 
 
 def _chain_params(*modules) -> Iterable[th.nn.parameter.Parameter]:
@@ -202,10 +202,13 @@ class AllLosses:
         inpaint: InpaintingNetwork,
     ) -> Tuple[th.Tensor, float]:
 
+        # Those are the target valurs, no gradients on those.
         drv_warp_encodings = inpaint.get_encode_no_grad(
             driver_img=driving_img, occlusion_masks=occlusion_masks
         )
         loss = 0
+        # we want the deforemed+occluded source to match the occluded driving.
+        # TODO: this will inject identity information to the inpainting net? the warped endocder feauters are totally
         for src, drv in zip(deformed_src_fmaps, drv_warp_encodings):
             loss += th.abs(src - drv).mean()
 

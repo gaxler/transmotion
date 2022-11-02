@@ -36,7 +36,8 @@ from transmotion.helpers import (
 from transmotion.inpainting import InpaintingConfig, InpaintingNetwork, InpaintingResult
 from transmotion.kp_detection import KPDetector, KPResult
 from transmotion.nn_blocks import get_pretrained_vgg19
-from transmotion.utils import ThinPlateSpline, deform_with_4d_deformation, grid_like_featuremap
+
+from transmotion.cord_warp import ThinPlateSpline, deform_with_4d_deformation, grid_like_featuremap
 
 Optimizers = Sequence[th.optim.Optimizer | None]
 Schedulers = Sequence[th.optim.lr_scheduler.MultiStepLR | None]

@@ -1,12 +1,8 @@
 """
 """
 from dataclasses import dataclass
-import imp
 import math
-from re import I
-from turtle import forward
-from typing import List, Optional, Tuple
-from urllib import request
+from typing import List, Tuple
 
 import torch as th
 from torchvision import models
@@ -17,7 +13,7 @@ from .blocks import AntiAliasInterpolation2d
 
 from .kp_detection import KPResult
 from .nn_blocks import Hourglass, UpBlock2d
-from .utils import (
+from .cord_warp import (
     ThinPlateSpline,
     make_coordinate_grid,
     conform_to_type_and_device,
@@ -138,7 +134,7 @@ def tps_warp_to_keypoints_with_background(
     grid_hw: Tuple[int, int],
     source: KPResult,
     driving: KPResult,
-    bkg_affine_param: BGMotionParam, # BGMotionParam | None ƒ
+    bkg_affine_param: BGMotionParam,  # BGMotionParam | None ƒ
 ) -> WarppedCords:
     """
     Warp a grid of coordinates of shape ``grid_hw``
@@ -283,7 +279,7 @@ class DenseMotionResult:
     Output of the DenseMotionNetwork
 
     :param deformed_source:  Source image deformed by K TPS transformations (not by the optical flow!)
-    :param contribution_maps: Convex weights on each of the TPS transforms & background transform 
+    :param contribution_maps: Convex weights on each of the TPS transforms & background transform
     :param optical_flow: a grid of coordinates :math:`\in [0,1]`, every coordinate tells us where grid pixel should be moved
     """
 
@@ -444,7 +440,7 @@ class DenseMotionNetwork(th.nn.Module):
         source_img: th.Tensor,
         src_kp: KPResult,
         drv_kp: KPResult,
-        bg_param: BGMotionParam =None,   #| None = None,
+        bg_param: BGMotionParam = None,  # | None = None,
         dropout_prob: float = 0.0,
     ) -> DenseMotionResult:
         """

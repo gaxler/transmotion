@@ -10,7 +10,8 @@ from torchvision import models
 
 
 from .configs import TPSConfig
-from .utils import make_coordinate_grid
+
+from .cord_warp import make_coordinate_grid
 
 
 @dataclass

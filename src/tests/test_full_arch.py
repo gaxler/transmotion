@@ -6,10 +6,14 @@ pkg_path = str(Path(__file__).parent.parent)
 sys.path.append(pkg_path)
 
 import torch as th
-from src.configs import InpaintingConfig, TPSConfig
-from src.dense_motion import DenseMotionConf, DenseMotionNetwork, DenseMotionResult
-from src.inpainting import InpaintingNetwork
-from src.kp_detection import KPDetector, KPResult
+from transmotion.configs import InpaintingConfig, TPSConfig
+from transmotion.dense_motion import (
+    DenseMotionConf,
+    DenseMotionNetwork,
+    DenseMotionResult,
+)
+from transmotion.inpainting import InpaintingNetwork
+from transmotion.kp_detection import KPDetector, KPResult
 
 
 def test_all():
@@ -35,10 +39,10 @@ def test_all():
     src_img = th.randn((batch, 3, 128, 128))
     drv_img = th.randn((batch, 3, 128, 128))
     src_res = kpd(src_img)
-    assert tuple(src_res.foregroud_kp.shape) == (batch, K, N, 2)
+    assert tuple(src_res.foreground_kp.shape) == (batch, K, N, 2)
     src_res: KPResult
     drv_res = kpd(drv_img)
-    assert tuple(drv_res.foregroud_kp.shape) == (batch, K, N, 2)
+    assert tuple(drv_res.foreground_kp.shape) == (batch, K, N, 2)
     drv_res: KPResult
 
     res = dense(src_img, src_res, drv_res, dropout_prob=0.15)
