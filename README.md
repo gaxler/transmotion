@@ -1,6 +1,6 @@
 # TransMotion
 
- [ [Quick Overview](https://gaxler.github.io/transmotion/book/demo.html) | [Docs](https://gaxler.github.io/transmotion/doc/) ] 
+ [ [Quick Overview](https://gaxler.github.io/transmotion/book/demo.html) | [Docs](https://gaxler.github.io/transmotion/doc/) | [Original TPS Repo](https://github.com/yoyo-nb/Thin-Plate-Spline-Motion-Model)] 
  
 
 The code that came with the
