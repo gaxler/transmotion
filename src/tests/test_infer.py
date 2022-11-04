@@ -97,7 +97,7 @@ def test_vid_inference():
         gen_frame = rearrange(res.generated_image, "b d h w -> b h w d").squeeze(0)
         drv_frame = rearrange(drv_img, "d h w -> h w d")
         frame = th.cat([gen_frame, drv_frame], dim=1)
-        predictions.append(frame.numpy())
+        predictions.append(frame.detach().cpu().numpy())
 
     out_path = str(STATIC_PATH / "out.gif")
     imageio.mimsave(out_path, [img_as_ubyte(f) for f in predictions], fps=25)

@@ -36,7 +36,7 @@ def draw_points_on_tensors(img_tensor: th.Tensor, key_points: KPResult, radius: 
     return_pil_imgs = []
 
     for (img, batch_kp) in zip(img_tensor, abs_keypoints):
-        new_img = img.clone().permute(1,2,0).numpy()
+        new_img = img.clone().permute(1,2,0).detach().cpu().numpy()
         pil_im = Image.fromarray(img_as_ubyte(new_img))
         draw = ImageDraw.Draw(pil_im)
         # shape kp: N 2
