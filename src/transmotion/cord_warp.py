@@ -274,7 +274,7 @@ class ThinPlateSpline:
         Q_mat[:, :, :N, :N] = K_mat
 
         # Calculate P
-        P_mat = th.ones((bs, K, N, d + 1), dtype=dtype).to(device)
+        P_mat = th.ones((bs, K, N, d + 1), dtype=dtype, device=device)
         P_mat[:, :, :, :d] = source_pts
 
         # Populate P and P.T
@@ -290,7 +290,7 @@ class ThinPlateSpline:
 
         # time to solve your problem.
         # make sure Q_mat is invertible
-        Q_mat = Q_mat + th.eye(N + 3)[None, None, :, :] * _eps
+        Q_mat = Q_mat + th.eye(N + 3, device=device)[None, None, :, :] * _eps
         Q_inv = th.inverse(Q_mat)
         W = th.einsum("bknm,bkmd->bknd", Q_inv, dst)
 
