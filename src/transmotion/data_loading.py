@@ -13,7 +13,7 @@ from PIL import Image
 from .kp_detection import KPResult
 
 
-def video_iteraotr(fpath: str) -> Iterable[np.ndarray]:
+def video_iterator(fpath: str) -> Iterable[np.ndarray]:
     """
     Turn a video file into an iterator over frames
     .. note:: This uses imageio for video decoding.
@@ -36,7 +36,7 @@ def load_driving_video(vid_path: str):
 
     meta = []
     frames = []
-    for frame in video_iteraotr(vid_path):
+    for frame in video_iterator(vid_path):
         frames.append(frame)
         meta.append(face_detector.process(frame))
 
@@ -84,7 +84,7 @@ def _to_tensor(it: Iterable[np.ndarray], frame_size: int) -> th.Tensor:
 
 
 def video_to_tensor(vid_path: str, frame_size: int):
-    return _to_tensor(it=video_iteraotr(vid_path), frame_size=frame_size)
+    return _to_tensor(it=video_iterator(vid_path), frame_size=frame_size)
 
 
 def image_to_tensor(img_path: str, frame_size: int) -> th.Tensor:
@@ -98,6 +98,6 @@ if __name__ == "__main__":
     # TODO: replace this with torchvision video loading, if gets out of beta
     drv_vid = "/Users/gregoryaxler/Desktop/projects/Thin-Plate-Spline-Motion-Model/assets/driving.mp4"
     src_img = "/Users/gregoryaxler/Desktop/projects/Thin-Plate-Spline-Motion-Model/assets/source.png"
-    cropped_vid_it = map_numpy(_center_crop_to_size(384), it=video_iteraotr(drv_vid))
+    cropped_vid_it = map_numpy(_center_crop_to_size(384), it=video_iterator(drv_vid))
     for frame in cropped_vid_it:
         pass

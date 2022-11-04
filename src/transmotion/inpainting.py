@@ -4,7 +4,7 @@ In-painting network
 
 from dataclasses import dataclass
 from re import I
-from typing import List
+from typing import List, Sequence, Tuple
 import torch as th
 import torch.nn.functional as F
 from einops import rearrange, repeat, parse_shape
@@ -130,31 +130,15 @@ class InpaintingNetwork(th.nn.Module):
         )
         self.num_channels = cfg.in_features
 
-    def forward(
-        self,
-        source_img: th.Tensor,
-        occlusion_masks: List[th.Tensor],
-        optical_flow: th.Tensor,
-    ) -> InpaintingResult:
+    def fwd_encoder(self, source_img: th.Tensor) -> Sequence[th.Tensor]:
+        
         """
-        Forward pass has the following flow:
-
-        -  encode source image to produce encoder features
-        -  produce optical-flow deformed (:func:`resize_deform`) and mask occluded features (:func:`resize_occlude`). we have two version of the encoder features, one with full gradients and another with gradient only on the optical-flow.
-        -  use the deformed features as inputs to the decoder
-        -  deform and occlude the source image 
-        -  final prediction is a convex combination of the deforemed-occluded source image and the inverse occluded decoder output 
-
+        Run the encoders forward pass. This function is here because you don't need to re-run the encdoer during inference.
 
         :param source_img: Source image batch
         :type source_img: ``[bs, 3, h, w]``
-        :param occlusion_masks: List of multi scale occlusion masks produced by :class:`transmotion.dense_motion.DenseMotionNetwork`.
-        :type occlusion_masks: ``[bs, d_i, h_i, w_i]`` for i-th element of the list
-        :param optical_flow: a grid of coordinates, every coordinate tells us where grid pixel should be moved
-        :type optical_flow: ``[bs, h, w, d (=2)]`` 
 
-
-        .. note:: A Check that the number of occlusion masks is consistent with the number of down-blocks happens during config initx
+        :return: Encodings and optical flow deformed image (same shape as input image)
         """
 
         out = self.first(source_img)
@@ -162,8 +146,33 @@ class InpaintingNetwork(th.nn.Module):
         for f in self.down_blocks:
             encoding.append(f(encoding[-1]))
 
-        out = encoding.pop()
-        encoding = encoding[::-1]
+
+        return encoding 
+
+    def fwd_decoder(
+        self,
+        source_img: th.Tensor,
+        raw_encoding: Sequence[th.Tensor],
+        occlusion_masks: List[th.Tensor],
+        optical_flow: th.Tensor,
+    ) -> InpaintingResult:
+        """
+        Decoder forward func, it takes Encoder result as input, deforms, occludes and decodes it.
+        
+        :param source_img: Source image batch
+        :type source_img: ``[bs, 3, h, w]``
+
+        :param raw_encoding: Output of the fwd_encoder func
+        :param occlusion_masks: List of multi scale occlusion masks produced by :class:`transmotion.dense_motion.DenseMotionNetwork`.
+        
+        :type occlusion_masks: ``[bs, d_i, h_i, w_i]`` for i-th element of the list
+        :param optical_flow: a grid of coordinates, every coordinate tells us where grid pixel should be moved
+        :type optical_flow: ``[bs, h, w, d (=2)]``
+
+        """
+
+        out = raw_encoding[-1]
+        encoding = raw_encoding[::-1][1:]
 
         # this one trains the optical flow
         out_ij = resize_deform(out.detach(), optical_flow)
@@ -214,6 +223,42 @@ class InpaintingNetwork(th.nn.Module):
             deformed_src_fmaps=warp_encoding,
             deformed_source=optical_flow_deformed_source,
             inpainted_img=inpainted_img,
+        )
+
+    def forward(
+        self,
+        source_img: th.Tensor,
+        occlusion_masks: List[th.Tensor],
+        optical_flow: th.Tensor,
+    ) -> InpaintingResult:
+        """
+        Forward pass has the following flow:
+
+        -  encode source image to produce encoder features
+        -  produce optical-flow deformed (:func:`resize_deform`) and mask occluded features (:func:`resize_occlude`). we have two version of the encoder features, one with full gradients and another with gradient only on the optical-flow.
+        -  use the deformed features as inputs to the decoder
+        -  deform and occlude the source image
+        -  final prediction is a convex combination of the deforemed-occluded source image and the inverse occluded decoder output
+
+
+        :param source_img: Source image batch
+        :type source_img: ``[bs, 3, h, w]``
+        :param occlusion_masks: List of multi scale occlusion masks produced by :class:`transmotion.dense_motion.DenseMotionNetwork`.
+        :type occlusion_masks: ``[bs, d_i, h_i, w_i]`` for i-th element of the list
+        :param optical_flow: a grid of coordinates, every coordinate tells us where grid pixel should be moved
+        :type optical_flow: ``[bs, h, w, d (=2)]``
+
+
+        .. note:: A Check that the number of occlusion masks is consistent with the number of down-blocks happens during config initx
+        """
+
+        raw_encoding = self.fwd_encoder(source_img=source_img)
+
+        return self.fwd_decoder(
+            source_img=source_img,
+            raw_encoding=raw_encoding,
+            occlusion_masks=occlusion_masks,
+            optical_flow=optical_flow
         )
 
     def get_encode_no_grad(

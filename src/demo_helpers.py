@@ -8,7 +8,7 @@ from einops import rearrange, repeat
 from PIL import Image
 from skimage.transform import resize
 
-from transmotion.data_loading import map_numpy, video_iteraotr
+from transmotion.data_loading import map_numpy, video_iterator
 from transmotion.dense_motion import BGMotionPredictor, DenseMotionNetwork
 from transmotion.inpainting import InpaintingNetwork
 from transmotion.kp_detection import KPDetector
@@ -25,7 +25,7 @@ def drv_vid_tensor(img_size: int):
             map_numpy(
                 lambda f: resize(f, (img_size, img_size)),
                 lambda f: f.astype(np.float32),
-                it=video_iteraotr(drv_vid),
+                it=video_iterator(drv_vid),
             )
         )
     )

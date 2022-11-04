@@ -27,11 +27,11 @@ from transmotion.dense_motion import (
     DenseMotionNetwork,
     DenseMotionResult,
 )
-from transmotion.helpers import (
+
+from transmotion.network_bundle import (
     NetworksBundle,
     chain_param,
     get_kp_normalized_forward_func,
-    load_original_weights,
 )
 from transmotion.inpainting import InpaintingConfig, InpaintingNetwork, InpaintingResult
 from transmotion.kp_detection import KPDetector, KPResult
@@ -334,7 +334,7 @@ def epoch(
 def get_dataloader(conf: DataLoadingConfig) -> DataLoader:
     import numpy as np
 
-    from transmotion.data_loading import _center_crop_to_size, map_numpy, video_iteraotr
+    from transmotion.data_loading import _center_crop_to_size, map_numpy, video_iterator
 
     drv_vid = "/Users/gregoryaxler/Desktop/projects/Thin-Plate-Spline-Motion-Model/assets/driving.mp4"
     # src_img = "/Users/gregoryaxler/Desktop/projects/Thin-Plate-Spline-Motion-Model/assets/source.png"
@@ -342,7 +342,7 @@ def get_dataloader(conf: DataLoadingConfig) -> DataLoader:
         map_numpy(
             _center_crop_to_size(384),
             lambda f: f.astype(np.float32),
-            it=video_iteraotr(drv_vid),
+            it=video_iterator(drv_vid),
         )
     )
     all_frames = np.divide(all_frames, 255.0)
@@ -372,7 +372,7 @@ def train(conf: TrainConfig, last_epoch: int = -1, checkpoint_path: str | None =
     dataloader = get_dataloader(conf=conf.data_loading)
     nets = build_nets(tps=conf.tps, dense=conf.dense_motion, inpaint=conf.inpainting)
     if checkpoint_path:
-        nets = load_original_weights(checkpoint_path, nets)
+        nets.load_original_weights(checkpoint_path)
 
     losses = LossFuncBundle(
         perceptual=conf.loss.perceptual,
@@ -414,7 +414,7 @@ if __name__ == "__main__":
     from PIL import Image
 
     from transmotion.configs import dummy_conf
-    from transmotion.data_loading import map_numpy, video_iteraotr, show_on_gird
+    from transmotion.data_loading import map_numpy, video_iterator, show_on_gird
 
     conf = dummy_conf()
 
@@ -431,7 +431,7 @@ if __name__ == "__main__":
                 # ),
                 lambda f: resize(f, (SIZE, SIZE)),
                 lambda f: f.astype(np.float32),
-                it=video_iteraotr(drv_vid),
+                it=video_iterator(drv_vid),
             )
         )
         # all_frames = np.divide(all_frames, 255.0)

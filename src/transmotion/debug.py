@@ -1,3 +1,7 @@
+"""
+This is an ad-hoc code used for debugging gaps in the dense motion generation network.
+Can safely ignore, its here "for my records"
+"""
 import torch as th
 from typing import Callable, Any, Dict, Sequence
 from pathlib import Path
