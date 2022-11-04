@@ -17,6 +17,10 @@ is being passed around and `einops` to be clearer about the shapes of
 tensors.
 
 <a href="https://colab.research.google.com/github/gaxler/transmotion/blob/master/colab_demo.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+
+Eventually you should get something like this:
+
+![](https://github.com/gaxler/transmotion/blob/36882bdc0e510676d58bf16cdea5ee7ef0d9eb7c/static/out.gif)
  
 
 #### This is still a work in progress. Most notably you’ll find missing
