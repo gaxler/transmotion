@@ -54,6 +54,7 @@ class KPResult:
 
         .. note:: This is a convenience method, this is used when generating heatmaps for the optical-flow estimation
         """
+        #TODO: do i have redundant copies from cpu->gpu here? what if i pass device to linspace? does it creates array in gpu memory?
         coordinate_grid = make_coordinate_grid(*hw_of_grid, self.foreground_kp.dtype).to(
             self.foreground_kp.device
         )
