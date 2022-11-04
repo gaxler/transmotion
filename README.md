@@ -20,7 +20,7 @@ tensors.
 
 Eventually you should get something like this:
 
-![](https://github.com/gaxler/transmotion/blob/36882bdc0e510676d58bf16cdea5ee7ef0d9eb7c/static/out.gif)
+![](static/out.gif)
  
 
 #### This is still a work in progress. Most notably you’ll find missing
