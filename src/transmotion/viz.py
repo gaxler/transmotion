@@ -59,6 +59,7 @@ def show_on_gird(*img_tnesors, **kwargs):
     """
     kwargs are passed to torchvision.utils.make_grid
     """
+    img_tnesors = [t.detach().cpu() for t in img_tnesors]
     grid_tensor = th.cat(img_tnesors, dim=0)
     out_example = torchvision.utils.make_grid(grid_tensor, **kwargs).permute(1, 2, 0).numpy()
     return Image.fromarray(img_as_ubyte(out_example))
