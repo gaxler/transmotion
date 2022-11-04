@@ -21,7 +21,11 @@ tensors.
 Eventually you should get something like this:
 
 ![](static/out.gif)
- 
+
+### Faster Inference
+
+During inference we can skip part of the copmutations for the source image. Most notably, we can skip the encoder part for the inpainting network. 
+Here I split the inpainting forward pass to encoder and decoder and run the encoder once during inference. This seems to speed up inference FPS by ~10%-20% (don't trust this number, I got it by eyeballing the tqdm its/sec for several runs)
 
 #### This is still a work in progress. Most notably you’ll find missing
 
