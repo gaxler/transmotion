@@ -1,0 +1,994 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="#" /><link rel="search" title="Search" href="search.html" />
+
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.09.29"/><title>Index - TransMotion documentation</title>
+<link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">TransMotion  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">TransMotion  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Stages of Motion Transfer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="train_signal.html">Training Signals</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="modules.html">transmotion</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="transmotion.html">transmotion package</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          
+<section class="genindex-section">
+  <h1 id="index">Index</h1>
+  <div class="genindex-jumpbox"><a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#E"><strong>E</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#I"><strong>I</strong></a> | <a href="#K"><strong>K</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#N"><strong>N</strong></a> | <a href="#O"><strong>O</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#U"><strong>U</strong></a> | <a href="#V"><strong>V</strong></a> | <a href="#W"><strong>W</strong></a></div>
+</section>
+<section id="A" class="genindex-section">
+  <h2>A</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.configs.OptimizerConfig.adam_beta1">adam_beta1 (transmotion.configs.OptimizerConfig attribute)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.configs.OptimizerConfig.adam_beta2">adam_beta2 (transmotion.configs.OptimizerConfig attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.blocks.AntiAliasInterpolation2d">AntiAliasInterpolation2d (class in transmotion.blocks)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="B" class="genindex-section">
+  <h2>B</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.configs.LossConfig.background">background (transmotion.configs.LossConfig attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.network_bundle.NetworksBundle.background_motion">background_motion (transmotion.network_bundle.NetworksBundle attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.network_bundle.NetworkBundleResult.background_param">background_param (transmotion.network_bundle.NetworkBundleResult attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.TrainConfig.background_start_epoch">background_start_epoch (transmotion.configs.TrainConfig attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.BackgroundLoss">BackgroundLoss (class in transmotion.configs)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.DenseMotionConf.base_dim">base_dim (transmotion.configs.DenseMotionConf attribute)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.configs.InpaintingConfig.base_dim">(transmotion.configs.InpaintingConfig attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.configs.DataLoadingConfig.batch_size">batch_size (transmotion.configs.DataLoadingConfig attribute)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.kp_detection.KPResult.batch_size">(transmotion.kp_detection.KPResult attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="transmotion.html#transmotion.dense_motion.BGMotionParam.bg_params">bg_params (transmotion.dense_motion.BGMotionParam attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.dense_motion.BGMotionParam">BGMotionParam (class in transmotion.dense_motion)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.dense_motion.BGMotionPredictor">BGMotionPredictor (class in transmotion.dense_motion)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.network_bundle.build_nets">build_nets() (in module transmotion.network_bundle)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="C" class="genindex-section">
+  <h2>C</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.network_bundle.chain_param">chain_param() (in module transmotion.network_bundle)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.network_bundle.NetworksBundle.clear_grads">clear_grads() (transmotion.network_bundle.NetworksBundle method)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.datasets.collate_fn">collate_fn() (in module transmotion.datasets)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.debug.MMapDebug.comp">comp() (transmotion.debug.MMapDebug method)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.cord_warp.conform_to_type_and_device">conform_to_type_and_device() (in module transmotion.cord_warp)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.dense_motion.DenseMotionResult.contribution_maps">contribution_maps (transmotion.dense_motion.DenseMotionResult attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.cord_warp.ThinPlateSpline.control_params">control_params (transmotion.cord_warp.ThinPlateSpline attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.cord_warp.ThinPlateSpline.control_points">control_points (transmotion.cord_warp.ThinPlateSpline attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="D" class="genindex-section">
+  <h2>D</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.configs.TrainConfig.data_loading">data_loading (transmotion.configs.TrainConfig attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.DataLoadingConfig">DataLoadingConfig (class in transmotion.configs)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.nn_blocks.Decoder">Decoder (class in transmotion.nn_blocks)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.dense_motion.WarppedCords.deform_frame">deform_frame() (transmotion.dense_motion.WarppedCords method)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.cord_warp.deform_with_4d_deformation">deform_with_4d_deformation() (in module transmotion.cord_warp)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.cord_warp.deform_with_5d_deformation">deform_with_5d_deformation() (in module transmotion.cord_warp)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.dense_motion.DenseMotionResult.deformed_source">deformed_source (transmotion.dense_motion.DenseMotionResult attribute)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.inpainting.InpaintingResult.deformed_source">(transmotion.inpainting.InpaintingResult attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="transmotion.html#transmotion.inpainting.InpaintingResult.deformed_src_fmaps">deformed_src_fmaps (transmotion.inpainting.InpaintingResult attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.TrainConfig.dense_motion">dense_motion (transmotion.configs.TrainConfig attribute)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.network_bundle.NetworkBundleResult.dense_motion">(transmotion.network_bundle.NetworkBundleResult attribute)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.network_bundle.NetworksBundle.dense_motion">(transmotion.network_bundle.NetworksBundle attribute)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.configs.DenseMotionConf">DenseMotionConf (class in transmotion.configs)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.dense_motion.DenseMotionNetwork">DenseMotionNetwork (class in transmotion.dense_motion)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.dense_motion.DenseMotionResult">DenseMotionResult (class in transmotion.dense_motion)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.kp_detection.KPResult.detach_to_cpu">detach_to_cpu() (transmotion.kp_detection.KPResult method)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.nn_blocks.DownBlock2d">DownBlock2d (class in transmotion.nn_blocks)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.viz.draw_points_on_tensors">draw_points_on_tensors() (in module transmotion.viz)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.datasets.SourceDrivingBatch.driving">driving (transmotion.datasets.SourceDrivingBatch attribute)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.datasets.SourceDrivingSample.driving">(transmotion.datasets.SourceDrivingSample attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="transmotion.html#transmotion.network_bundle.NetworkBundleResult.driving_keypoints">driving_keypoints (transmotion.network_bundle.NetworkBundleResult attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.TrainConfig.dropout">dropout (transmotion.configs.TrainConfig attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.DropoutConfig">DropoutConfig (class in transmotion.configs)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.dummy_conf">dummy_conf() (in module transmotion.configs)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="E" class="genindex-section">
+  <h2>E</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.nn_blocks.Encoder">Encoder (class in transmotion.nn_blocks)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.LossConfig.equivariance">equivariance (transmotion.configs.LossConfig attribute)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.configs.EquivarianceLoss">EquivarianceLoss (class in transmotion.configs)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.network_bundle.NetworksBundle.eval">eval() (transmotion.network_bundle.NetworksBundle method)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="F" class="genindex-section">
+  <h2>F</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.cord_warp.ThinPlateSpline.fit">fit() (transmotion.cord_warp.ThinPlateSpline class method)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.kp_detection.KPResult.foreground_kp">foreground_kp (transmotion.kp_detection.KPResult attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.blocks.AntiAliasInterpolation2d.forward">forward() (transmotion.blocks.AntiAliasInterpolation2d method)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.blocks.ImagePyramid.forward">(transmotion.blocks.ImagePyramid method)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.dense_motion.BGMotionPredictor.forward">(transmotion.dense_motion.BGMotionPredictor method)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.dense_motion.DenseMotionNetwork.forward">(transmotion.dense_motion.DenseMotionNetwork method)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.dense_motion.LearnedUpsample.forward">(transmotion.dense_motion.LearnedUpsample method)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.dense_motion.OcclusionMasks.forward">(transmotion.dense_motion.OcclusionMasks method)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.inpainting.InpaintingNetwork.forward">(transmotion.inpainting.InpaintingNetwork method)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.kp_detection.KPDetector.forward">(transmotion.kp_detection.KPDetector method)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.network_bundle.NetworksBundle.forward">(transmotion.network_bundle.NetworksBundle method)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.nn_blocks.Decoder.forward">(transmotion.nn_blocks.Decoder method)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.nn_blocks.DownBlock2d.forward">(transmotion.nn_blocks.DownBlock2d method)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.nn_blocks.Encoder.forward">(transmotion.nn_blocks.Encoder method)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.nn_blocks.Hourglass.forward">(transmotion.nn_blocks.Hourglass method)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.nn_blocks.ResBlock2d.forward">(transmotion.nn_blocks.ResBlock2d method)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.nn_blocks.SameBlock2d.forward">(transmotion.nn_blocks.SameBlock2d method)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.nn_blocks.UpBlock2d.forward">(transmotion.nn_blocks.UpBlock2d method)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.nn_blocks.Vgg19.forward">(transmotion.nn_blocks.Vgg19 method)</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.inpainting.InpaintingNetwork.fwd_decoder">fwd_decoder() (transmotion.inpainting.InpaintingNetwork method)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.inpainting.InpaintingNetwork.fwd_encoder">fwd_encoder() (transmotion.inpainting.InpaintingNetwork method)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="G" class="genindex-section">
+  <h2>G</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.network_bundle.NetworkBundleResult.generated_image">generated_image (transmotion.network_bundle.NetworkBundleResult property)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.inpainting.InpaintingNetwork.get_encode_no_grad">get_encode_no_grad() (transmotion.inpainting.InpaintingNetwork method)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.network_bundle.get_kp_normalized_forward_func">get_kp_normalized_forward_func() (in module transmotion.network_bundle)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.nn_blocks.get_pretrained_vgg19">get_pretrained_vgg19() (in module transmotion.nn_blocks)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.cord_warp.grid_like_featuremap">grid_like_featuremap() (in module transmotion.cord_warp)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="H" class="genindex-section">
+  <h2>H</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.dense_motion.DenseMotionNetwork.hg_to_num_mappings">hg_to_num_mappings (transmotion.dense_motion.DenseMotionNetwork attribute)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.nn_blocks.Hourglass">Hourglass (class in transmotion.nn_blocks)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="I" class="genindex-section">
+  <h2>I</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.configs.TrainConfig.image_size">image_size (transmotion.configs.TrainConfig attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.data_loading.image_to_tensor">image_to_tensor() (in module transmotion.data_loading)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.blocks.ImagePyramid">ImagePyramid (class in transmotion.blocks)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.weights.import_state_dict">import_state_dict() (in module transmotion.weights)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.PerceptualLoss.in_dim">in_dim (transmotion.configs.PerceptualLoss attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.DenseMotionConf.in_features">in_features (transmotion.configs.DenseMotionConf attribute)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.configs.InpaintingConfig.in_features">(transmotion.configs.InpaintingConfig attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="transmotion.html#transmotion.dense_motion.DenseMotionNetwork.infer_optical_flow">infer_optical_flow() (transmotion.dense_motion.DenseMotionNetwork method)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.configs.DropoutConfig.init_prob">init_prob (transmotion.configs.DropoutConfig attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.OptimizerConfig.initial_lr">initial_lr (transmotion.configs.OptimizerConfig attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.network_bundle.NetworksBundle.inpaint">inpaint (transmotion.network_bundle.NetworksBundle attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.inpainting.InpaintingResult.inpainted_img">inpainted_img (transmotion.inpainting.InpaintingResult attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.TrainConfig.inpainting">inpainting (transmotion.configs.TrainConfig attribute)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.network_bundle.NetworkBundleResult.inpainting">(transmotion.network_bundle.NetworkBundleResult attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="transmotion.html#transmotion.configs.InpaintingConfig">InpaintingConfig (class in transmotion.configs)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.inpainting.InpaintingNetwork">InpaintingNetwork (class in transmotion.inpainting)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.inpainting.InpaintingResult">InpaintingResult (class in transmotion.inpainting)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="K" class="genindex-section">
+  <h2>K</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.network_bundle.NetworksBundle.key_points">key_points (transmotion.network_bundle.NetworksBundle attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.dense_motion.keypoints_to_heatmap_representation">keypoints_to_heatmap_representation() (in module transmotion.dense_motion)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.configs.DenseMotionConf.kp_variance">kp_variance (transmotion.configs.DenseMotionConf attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.kp_detection.KPDetector">KPDetector (class in transmotion.kp_detection)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.kp_detection.KPResult">KPResult (class in transmotion.kp_detection)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="L" class="genindex-section">
+  <h2>L</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.nn_blocks.Hourglass.last_out_dim">last_out_dim (transmotion.nn_blocks.Hourglass attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.dense_motion.LearnedUpsample">LearnedUpsample (class in transmotion.dense_motion)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.data_loading.load_driving_video">load_driving_video() (in module transmotion.data_loading)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.network_bundle.load_original_weights">load_original_weights() (in module transmotion.network_bundle)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.network_bundle.NetworksBundle.load_original_weights">(transmotion.network_bundle.NetworksBundle method)</a>
+</li>
+        </ul></li>
+        <li><a href="transmotion.html#transmotion.configs.TrainConfig.loss">loss (transmotion.configs.TrainConfig attribute)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.configs.BackgroundLoss.loss_weight">loss_weight (transmotion.configs.BackgroundLoss attribute)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.configs.EquivarianceLoss.loss_weight">(transmotion.configs.EquivarianceLoss attribute)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.configs.WarpLoss.loss_weight">(transmotion.configs.WarpLoss attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="transmotion.html#transmotion.configs.PerceptualLoss.loss_weights">loss_weights (transmotion.configs.PerceptualLoss attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.LossConfig">LossConfig (class in transmotion.configs)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.OptimizerConfig.lr_decay_epoch_sched">lr_decay_epoch_sched (transmotion.configs.OptimizerConfig attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.OptimizerConfig.lr_decay_gamma">lr_decay_gamma (transmotion.configs.OptimizerConfig attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="M" class="genindex-section">
+  <h2>M</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.cord_warp.make_coordinate_grid">make_coordinate_grid() (in module transmotion.cord_warp)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.data_loading.map_numpy">map_numpy() (in module transmotion.data_loading)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.DenseMotionConf.max_features">max_features (transmotion.configs.DenseMotionConf attribute)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.configs.InpaintingConfig.max_features">(transmotion.configs.InpaintingConfig attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="transmotion.html#transmotion.configs.DropoutConfig.max_prob">max_prob (transmotion.configs.DropoutConfig attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.dense_motion.DenseMotionNetwork.maybe_upsample_infer_occlusion_masks">maybe_upsample_infer_occlusion_masks() (transmotion.dense_motion.DenseMotionNetwork method)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.debug.MMapDebug">MMapDebug (class in transmotion.debug)</a>
+</li>
+        <li>
+    module
+
+        <ul>
+          <li><a href="transmotion.html#module-transmotion">transmotion</a>
+</li>
+          <li><a href="transmotion.html#module-transmotion.blocks">transmotion.blocks</a>
+</li>
+          <li><a href="transmotion.html#module-transmotion.configs">transmotion.configs</a>
+</li>
+          <li><a href="transmotion.html#module-transmotion.cord_warp">transmotion.cord_warp</a>
+</li>
+          <li><a href="transmotion.html#module-transmotion.data_loading">transmotion.data_loading</a>
+</li>
+          <li><a href="transmotion.html#module-transmotion.datasets">transmotion.datasets</a>
+</li>
+          <li><a href="transmotion.html#module-transmotion.debug">transmotion.debug</a>
+</li>
+          <li><a href="transmotion.html#module-transmotion.dense_motion">transmotion.dense_motion</a>
+</li>
+          <li><a href="transmotion.html#module-transmotion.inpainting">transmotion.inpainting</a>
+</li>
+          <li><a href="transmotion.html#module-transmotion.kp_detection">transmotion.kp_detection</a>
+</li>
+          <li><a href="transmotion.html#module-transmotion.network_bundle">transmotion.network_bundle</a>
+</li>
+          <li><a href="transmotion.html#module-transmotion.nn_blocks">transmotion.nn_blocks</a>
+</li>
+          <li><a href="transmotion.html#module-transmotion.viz">transmotion.viz</a>
+</li>
+          <li><a href="transmotion.html#module-transmotion.weights">transmotion.weights</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="N" class="genindex-section">
+  <h2>N</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.blocks.ImagePyramid.nearest_scale">nearest_scale() (transmotion.blocks.ImagePyramid method)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.network_bundle.NetworkBundleResult">NetworkBundleResult (class in transmotion.network_bundle)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.network_bundle.NetworksBundle">NetworksBundle (class in transmotion.network_bundle)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.network_bundle.NetworksBundle.no_background">no_background() (transmotion.network_bundle.NetworksBundle method)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.kp_detection.KPResult.normalize_relative_to">normalize_relative_to() (transmotion.kp_detection.KPResult method)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.DenseMotionConf.num_blocks">num_blocks (transmotion.configs.DenseMotionConf attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.InpaintingConfig.num_down_blocks">num_down_blocks (transmotion.configs.InpaintingConfig attribute)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.configs.TrainConfig.num_epochs">num_epochs (transmotion.configs.TrainConfig attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.DenseMotionConf.num_occlusion_masks">num_occlusion_masks (transmotion.configs.DenseMotionConf attribute)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.configs.InpaintingConfig.num_occlusion_masks">(transmotion.configs.InpaintingConfig attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="transmotion.html#transmotion.configs.TPSConfig.num_tps">num_tps (transmotion.configs.TPSConfig attribute)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.dense_motion.WarppedCords.num_tps">(transmotion.dense_motion.WarppedCords attribute)</a>
+</li>
+          <li><a href="transmotion.html#transmotion.kp_detection.KPResult.num_tps">(transmotion.kp_detection.KPResult attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="transmotion.html#transmotion.configs.DataLoadingConfig.num_workers">num_workers (transmotion.configs.DataLoadingConfig attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="O" class="genindex-section">
+  <h2>O</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.dense_motion.DenseMotionResult.occlusion_masks">occlusion_masks (transmotion.dense_motion.DenseMotionResult attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.dense_motion.OcclusionMasks">OcclusionMasks (class in transmotion.dense_motion)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.dense_motion.DenseMotionResult.optical_flow">optical_flow (transmotion.dense_motion.DenseMotionResult attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.TrainConfig.optimizer">optimizer (transmotion.configs.TrainConfig attribute)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.configs.OptimizerConfig">OptimizerConfig (class in transmotion.configs)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.nn_blocks.Decoder.out_channels">out_channels (transmotion.nn_blocks.Decoder attribute)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.nn_blocks.Hourglass.out_channels">(transmotion.nn_blocks.Hourglass attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="transmotion.html#transmotion.nn_blocks.Decoder.out_dim">out_dim (transmotion.nn_blocks.Decoder attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="P" class="genindex-section">
+  <h2>P</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.weights.param_name_iou">param_name_iou() (in module transmotion.weights)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.network_bundle.NetworksBundle.parameters">parameters() (transmotion.network_bundle.NetworksBundle method)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.LossConfig.perceptual">perceptual (transmotion.configs.LossConfig attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.PerceptualLoss">PerceptualLoss (class in transmotion.configs)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.configs.EquivarianceLoss.points_per_tps">points_per_tps (transmotion.configs.EquivarianceLoss attribute)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.configs.TPSConfig.points_per_tps">(transmotion.configs.TPSConfig attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="transmotion.html#transmotion.configs.DropoutConfig.prob_inc_epochs">prob_inc_epochs (transmotion.configs.DropoutConfig attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.kp_detection.KPResult.pts_per_tps">pts_per_tps (transmotion.kp_detection.KPResult attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.debug.MMapDebug.push">push() (transmotion.debug.MMapDebug method)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="R" class="genindex-section">
+  <h2>R</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.cord_warp.ThinPlateSpline.random">random() (transmotion.cord_warp.ThinPlateSpline class method)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.weights.reconcile_weights">reconcile_weights() (in module transmotion.weights)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.nn_blocks.ResBlock2d">ResBlock2d (class in transmotion.nn_blocks)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.inpainting.resize_deform">resize_deform() (in module transmotion.inpainting)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.inpainting.resize_occlude">resize_occlude() (in module transmotion.inpainting)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="S" class="genindex-section">
+  <h2>S</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.nn_blocks.SameBlock2d">SameBlock2d (class in transmotion.nn_blocks)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.DenseMotionConf.scale_factor">scale_factor (transmotion.configs.DenseMotionConf attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.PerceptualLoss.scales">scales (transmotion.configs.PerceptualLoss attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.viz.show_on_gird">show_on_gird() (in module transmotion.viz)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.viz.show_points_on_grid">show_points_on_grid() (in module transmotion.viz)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.EquivarianceLoss.sigma_affine">sigma_affine (transmotion.configs.EquivarianceLoss attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.EquivarianceLoss.sigma_tps">sigma_tps (transmotion.configs.EquivarianceLoss attribute)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.datasets.SourceDrivingBatch.source">source (transmotion.datasets.SourceDrivingBatch attribute)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.datasets.SourceDrivingSample.source">(transmotion.datasets.SourceDrivingSample attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="transmotion.html#transmotion.network_bundle.NetworkBundleResult.source_keypoints">source_keypoints (transmotion.network_bundle.NetworkBundleResult attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.datasets.SourceDrivingBatch">SourceDrivingBatch (class in transmotion.datasets)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.datasets.SourceDrivingSample">SourceDrivingSample (class in transmotion.datasets)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.kp_detection.KPDetector.spatial_dim">spatial_dim (transmotion.kp_detection.KPDetector attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.DropoutConfig.start_epoch">start_epoch (transmotion.configs.DropoutConfig attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="T" class="genindex-section">
+  <h2>T</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.cord_warp.ThinPlateSpline.theta">theta (transmotion.cord_warp.ThinPlateSpline attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.cord_warp.ThinPlateSpline">ThinPlateSpline (class in transmotion.cord_warp)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.kp_detection.KPResult.to_gaussians">to_gaussians() (transmotion.kp_detection.KPResult method)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.DenseMotionConf.tps">tps (transmotion.configs.DenseMotionConf attribute)</a>
+
+        <ul>
+          <li><a href="transmotion.html#transmotion.configs.TrainConfig.tps">(transmotion.configs.TrainConfig attribute)</a>
+</li>
+        </ul></li>
+        <li><a href="transmotion.html#transmotion.dense_motion.tps_dropout_softmax">tps_dropout_softmax() (in module transmotion.dense_motion)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.dense_motion.tps_warp_to_keypoints_with_background">tps_warp_to_keypoints_with_background() (in module transmotion.dense_motion)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.TPSConfig">TPSConfig (class in transmotion.configs)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.TrainConfig">TrainConfig (class in transmotion.configs)</a>
+</li>
+        <li>
+    transmotion
+
+        <ul>
+          <li><a href="transmotion.html#module-transmotion">module</a>
+</li>
+        </ul></li>
+        <li>
+    transmotion.blocks
+
+        <ul>
+          <li><a href="transmotion.html#module-transmotion.blocks">module</a>
+</li>
+        </ul></li>
+        <li>
+    transmotion.configs
+
+        <ul>
+          <li><a href="transmotion.html#module-transmotion.configs">module</a>
+</li>
+        </ul></li>
+        <li>
+    transmotion.cord_warp
+
+        <ul>
+          <li><a href="transmotion.html#module-transmotion.cord_warp">module</a>
+</li>
+        </ul></li>
+        <li>
+    transmotion.data_loading
+
+        <ul>
+          <li><a href="transmotion.html#module-transmotion.data_loading">module</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li>
+    transmotion.datasets
+
+        <ul>
+          <li><a href="transmotion.html#module-transmotion.datasets">module</a>
+</li>
+        </ul></li>
+        <li>
+    transmotion.debug
+
+        <ul>
+          <li><a href="transmotion.html#module-transmotion.debug">module</a>
+</li>
+        </ul></li>
+        <li>
+    transmotion.dense_motion
+
+        <ul>
+          <li><a href="transmotion.html#module-transmotion.dense_motion">module</a>
+</li>
+        </ul></li>
+        <li>
+    transmotion.inpainting
+
+        <ul>
+          <li><a href="transmotion.html#module-transmotion.inpainting">module</a>
+</li>
+        </ul></li>
+        <li>
+    transmotion.kp_detection
+
+        <ul>
+          <li><a href="transmotion.html#module-transmotion.kp_detection">module</a>
+</li>
+        </ul></li>
+        <li>
+    transmotion.network_bundle
+
+        <ul>
+          <li><a href="transmotion.html#module-transmotion.network_bundle">module</a>
+</li>
+        </ul></li>
+        <li>
+    transmotion.nn_blocks
+
+        <ul>
+          <li><a href="transmotion.html#module-transmotion.nn_blocks">module</a>
+</li>
+        </ul></li>
+        <li>
+    transmotion.viz
+
+        <ul>
+          <li><a href="transmotion.html#module-transmotion.viz">module</a>
+</li>
+        </ul></li>
+        <li>
+    transmotion.weights
+
+        <ul>
+          <li><a href="transmotion.html#module-transmotion.weights">module</a>
+</li>
+        </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="U" class="genindex-section">
+  <h2>U</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.nn_blocks.UpBlock2d">UpBlock2d (class in transmotion.nn_blocks)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="V" class="genindex-section">
+  <h2>V</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.nn_blocks.Vgg19">Vgg19 (class in transmotion.nn_blocks)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.data_loading.video_iterator">video_iterator() (in module transmotion.data_loading)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.data_loading.video_to_tensor">video_to_tensor() (in module transmotion.data_loading)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="W" class="genindex-section">
+  <h2>W</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.configs.LossConfig.warp">warp (transmotion.configs.LossConfig attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.cord_warp.ThinPlateSpline.warp_cords">warp_cords() (transmotion.cord_warp.ThinPlateSpline method)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.WarpLoss">WarpLoss (class in transmotion.configs)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="transmotion.html#transmotion.dense_motion.WarppedCords.warpped_cords">warpped_cords (transmotion.dense_motion.WarppedCords attribute)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.dense_motion.WarppedCords">WarppedCords (class in transmotion.dense_motion)</a>
+</li>
+        <li><a href="transmotion.html#transmotion.configs.OptimizerConfig.weight_decay">weight_decay (transmotion.configs.OptimizerConfig attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, Gregory Axler
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    </body>
+</html>
