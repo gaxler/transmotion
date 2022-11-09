@@ -81,6 +81,7 @@ def import_state_dict(old: Dict, new_: Dict) -> Dict:
     Models haven't changed much from the original, mostly ordered stayed the same.
 
     **The matching heuristics are as follows**:
+    
     1. Match according to weight shapes (model must have the same shapes and the same number of weight for each shape)
     2. In case more than one weight share shape, perform text similarity on weight name, make sure that the order of old weights matches the order of new weights
 

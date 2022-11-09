@@ -25,12 +25,8 @@ from .configs import DenseMotionConf
 
 @dataclass
 class BGMotionParam:
-    """
-    :param bg_params: Affine transform parameters (3x3 shape, with last row as bias [0,0,1])
-    :type bg_params: [bs, 3, 3]
-    """
-
     bg_params: th.Tensor
+    """ Affine transform parameters (3x3 shape, with last row as bias [0,0,1]) Shape: ``[bs, 3, 3]`` """
 
 
 class BGMotionPredictor(th.nn.Module):

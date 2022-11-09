@@ -5,22 +5,23 @@ from typing import List, Sequence
 @dataclass
 class TPSConfig:
     num_tps: int
+    """ We use multiple TPS transforms. Here you specify the number to use"""
     points_per_tps: int
+    """ Each TPS transform has a number of control points that will be matched exactly. Here you specify the number of those points """
 
 
 @dataclass
 class DenseMotionConf:
-    """
-    :param base_dim: Dimension that encoder and decoder networks start from. This dim multiplied in each block i by a factor of 2^i
-    :param in_features: Input dimension to the dense mottion network. Usually the input is an image so this value is 3
-    """
 
     base_dim: int
+    """ Dimension that encoder and decoder networks start from. This dim multiplied in each block i by a factor of :math:`2^i` """
     tps: TPSConfig
     num_blocks: int
     in_features: int
+    """ Input dimension to the dense motion network. Usually the input is an image so this value is 3 """
     max_features: int
     kp_variance: float = 0.01
+    """ Variance used in Gaussian heatmaps representation  """
     scale_factor: float = 0.25
     num_occlusion_masks: int = 4
 
@@ -47,24 +48,28 @@ class InpaintingConfig:
 class PerceptualLoss:
     """
     Get VGG features from multiple scales of the driving image and the generated image.
-    Train on generated images with L_1 loss.
-
-    :param scales: List of float number that represent the scaling factors to be applied on the images. This needs to conform to the number of feature maps you get from the perceptual loss network.
-    By default we use VGG19 here, this net has 5 feature map output. #TODO: Might need to make this more general and explicitly link number of feature maps to number of scales.
-    :param loss_weight: Loss weights (for each scale) when aggreagted into total loss value
-    :param in_dim: Perceptual loss multi-scale image pyramid, this is the in dimension of the pyramid input
+    Train on generated images with :math:`L_1` loss.
     """
 
     scales: Sequence[float]
+    """ List of float number that represent the scaling factors to be applied on the images. This needs to conform to the number of feature maps you get from the perceptual loss network.
+    By default we use VGG19 here, this net has 5 feature map output. #TODO: Might need to make this more general and explicitly link number of feature maps to number of scales."""
     loss_weights: Sequence[float]
+    """ Loss weights (for each scale) when aggreagted into total loss value """
     in_dim: int
+    """ Perceptual loss multi-scale image pyramid, this is the in dimension of the pyramid input """
 
 
 @dataclass
 class EquivarianceLoss:
+    """ This loss requires a random TPS transformation, the parameters of this transformation are specified here."""
+
     sigma_tps: float
+    """ standard deviation for TPS kernel mixing params (generated randomly) """
     sigma_affine: float
+    """ standard deviation for affine transform params (generated randomly) """
     points_per_tps: int
+    """ number of control points to use for the TPS """
     loss_weight: float
 
 
@@ -89,16 +94,16 @@ class LossConfig:
 @dataclass
 class OptimizerConfig:
     """
-    :param initial_lr: base learning rate for the optimizer
-    :param lr_decay_epoch_sched: Sequence of epoch numbers that represent learning rate decay steps. decay is by lr_decay_gamma
-    :param lr_decay_gamma: Learning rate decay parameter. Decay happens according to lr_decay_epoch_sched
+    Learning rates, decay parameters and scheduling
     """
 
     initial_lr: float
+    """ base learning rate for the optimizer """
     lr_decay_epoch_sched: Sequence[int]
     """ Sequence of epoch numbers that represent learning rate decay steps. decay is by lr_decay_gamma """
 
     lr_decay_gamma: float
+    """ Learning rate decay parameter. Decay happens according to lr_decay_epoch_sched """
     adam_beta1: float = 0.5
     adam_beta2: float = 0.999
     weight_decay: float = 1e-4
@@ -107,10 +112,10 @@ class OptimizerConfig:
 @dataclass
 class DropoutConfig:
     """
-    Drop-out is applied during tarining to the DenseMotion network. Its not a property of the network but an external param to the forward pass.
+    Drop-out is applied during training to the DenseMotion network. Its not a property of the network but an external param to the forward pass.
     So the config for that is in general train config and not the dense motion config.
 
-    :param prob_inc_epoch: Increment dropout probaility over this amount of epochs
+    :param prob_inc_epoch: Increment dropout probability over this amount of epochs
     """
 
     start_epoch: int
@@ -127,7 +132,7 @@ class DataLoadingConfig:
 
 @dataclass
 class TrainConfig:
-    """ """
+    """ Specifies all the parameters needed for training """
 
     data_loading: DataLoadingConfig
     num_epochs: int
@@ -138,7 +143,9 @@ class TrainConfig:
     tps: TPSConfig
     loss: LossConfig
     background_start_epoch: int
+    """ You might want to start background training later, this specifies what epoch bg training will start"""
     image_size: int
+    """ TPS works on square images of size ``image_size x image_size``"""
 
 
 def dummy_conf() -> TrainConfig:

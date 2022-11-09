@@ -72,9 +72,9 @@ class KPResult:
         self, init_: "KPResult", cur_: "KPResult"
     ) -> "KPResult":
         """
-        Normalize key-points relative to some initial key-ponint and current key-points.
+        Normalize key-points relative to some initial key-point and current key-points.
 
-        Take the difference vectors of current key-points to some inital key-points. Use the difference vectors to translate current key points.
+        Take the difference vectors of current key-points to some initial key-points. Use the difference vectors to translate current key points.
 
         :param init_: initial key-points
         :param cur_: current key-points
@@ -107,8 +107,8 @@ class KPResult:
 
 class KPDetector(nn.Module):
     """
-    The network is ResNet-18 that produces **num_tps*points_per_tps*spatial_dim** dimentional feature.
-    We late interpert the output as key-points of the shape: ``[num_tps, points_per_tps, spatial_dim]``
+    The network is ResNet-18 that produces **num_tps*points_per_tps*spatial_dim** dimensional feature.
+    We later interpret the output as key-points of the shape: ``[num_tps, points_per_tps, spatial_dim]``
     """
 
     spatial_dim: int = 2

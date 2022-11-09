@@ -107,34 +107,36 @@ def deform_with_4d_deformation(frame: th.Tensor, deformation: th.Tensor) -> th.T
 @dataclass
 class ThinPlateSpline:
     """
-    This Spline is equivalent ot a function that transfomrs a set of point to be close to some other set of point while keepeing the transformation smooth.
-    THe other set of points are the control points and smoothness is measuered as the second derivative of the transformation,
+    This Spline is equivalent ot a function that transforms a set of point to be close to some other set of point while keeping the transformation smooth.
+    The other set of points are the control points and smoothness is measured as the second derivative of the transformation.
 
     we have the following params in this transformation:
-        A_k, b_k = theta
-        W_k = control params
-        p_k = control points
+    
+    - :math:`A_k, b_k` = theta
+    - :math:`W_k` = control params
+    - :math:`p_k` = control points
 
     To transform a point P:
-        $$
-        P_ = (A_k \dot p + b) + W_k \dot U(|| p_k - p ||)
-        $$
 
-    :param control_points: The points that our transformation needs to match exactly
-    :type control_points: ``[bs, K, N, 2]``
-    :param control_params: Weights that we apply on our kerenl function
+    .. math::
+        \hat{P} = (A_k p + b_k) + W_k U(|| p_k - p ||)
+    
+
+    :math:`U` is the Kernel function. 
+
 
     """
 
     control_points: th.Tensor
-    """ shape: `[b, K, 2]` Each new point we transform is am affine combination of control set point. each control point is weighted according to a kernel distance from the point being transformed"""
+    """ The points that our transformation needs to match exactly. Shape - ``[b, K, 2]`` Each new point we transform is am affine combination of control set point. each control point is weighted according to a kernel distance from the point being transformed """
     """ [bs, K, N, 2] control points for each TPS transform"""
     control_params: th.Tensor
+    """ Weights that we apply on our kernel function """
     """ [bs, 1, K**2]"""
     """ Those are the [b K N 2]"""
 
     theta: th.Tensor
-    """ Affine Transfor Parameters [bs, K, 2, 3] a batch of K TPS transforms"""
+    """ Affine Transform Parameters [bs, K, 2, 3] a batch of K TPS transforms"""
 
     _warp_cords: Callable[[th.Tensor, th.Tensor, th.Tensor, th.Tensor], th.Tensor]
     """ A function to warp coordinates, random warp uses a different wrapping implementation"""
@@ -168,14 +170,14 @@ class ThinPlateSpline:
     ):
         """Random Transform is a special case of the full TPS. This one does a random affine transform and jitter them in a diagonal (weighted by TPS params)"""
         K = num_transforms
-        noise = th.normal(mean=0, std=sigma_tps * th.ones([batch_size, K, 2, 3]))
+        noise = th.normal(mean=0, std=sigma_affine * th.ones([batch_size, K, 2, 3]))
         theta = noise + th.eye(2, 3)[None, None, :, :]  # [bs, K, 2, 3]
 
         control_points = make_coordinate_grid(
             num_points, num_points, dtype=noise.dtype
         )[
             None, ...
-        ]  # [1, √N, √N, 2] this is just a convinience to spread points accross the frame, we don't want it in a grid format.
+        ]  # [1, √N, √N, 2] this is just a convenience to spread points across the frame, we don't want it in a grid format.
         # this is not a random generation of points, so it stays the same for every batch member and every transform
         control_points = rearrange(
             control_points,
@@ -186,7 +188,7 @@ class ThinPlateSpline:
 
         control_params = th.normal(
             mean=0,
-            std=sigma_affine * th.ones([batch_size, K, num_points**2]),
+            std=sigma_tps * th.ones([batch_size, K, num_points**2]),
         )  # [bs, K, N]
 
         def random_wrap_func(
