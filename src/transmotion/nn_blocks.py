@@ -2,7 +2,6 @@
 
 .. include:: ../docs/nn_blocks.md
 """
-from statistics import mode
 from typing import List, Tuple
 
 import torch as th
